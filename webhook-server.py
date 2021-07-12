@@ -34,7 +34,7 @@ def send(message):
 def link(user):
   return f"[{user}](https://github.com/{user})"
 
-def linkref(refname):
+def linkref(refname, data):
   return f"[{refname}]({data['repository']['url']}/tree/{refname})"
 
 def linkissue(issue, caps = True):
@@ -214,10 +214,10 @@ def receive_github_webhook():
     refname = data["ref"][11:]
     if "commits" in data:
       for commit in data["commits"]:
-        send(f"{link(data['sender']['login'])} pushed a [commit]({commit['url']}) to {linkref(refname)}: _{msgify(commit['message'])}_")
+        send(f"{link(data['sender']['login'])} pushed a [commit]({commit['url']}) to {linkref(refname, data)}: _{msgify(commit['message'])}_")
     if data["created"]:
       oldref = data["base_ref"][11:]
-      send(f"{link(data['sender']['login'])} created branch {linkref(refname)} from {linkref(oldref)}")
+      send(f"{link(data['sender']['login'])} created branch {linkref(refname, data)} from {linkref(oldref, data)}")
     elif data["deleted"]:
       send(f"{link(data['sender']['login'])} deleted branch {refname}")
   return ""
