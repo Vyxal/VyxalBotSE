@@ -3,7 +3,7 @@ import hmac, html, json, re
 from flask import Flask, request
 from flask_cors import CORS
 
-import random, requests
+import inspect, random, requests
 
 app = Flask(__name__)
 CORS(app)
@@ -116,23 +116,23 @@ def receive_message():
     else:
       output.insert(0, f"[@{message['user_name'].replace(' ', '')}: {message['message_id']}]")
       return "\n".join("    " + line for line in output)
-  without_ping = re.sub("^" + ping_regex, "", content.lower())
-  if re.match(r"\s+(exec(ute)?|run|run code|eval(uate)?)", without_ping):
+  without_ping = re.sub("^" + ping_regex, "", content.lower()).strip()
+  if re.match(r"^(exec(ute)?|run|run code|eval(uate)?)", without_ping):
     return f"{reply} Did you forget to put backticks around your code (%s)? Remember to escape any backticks in your code (to type %s, enter %s)." % (r"`\`code\``", r"`\`hi\``", "`\`\\\`hi\\\`\``")
-  if re.match(r"\s+(status|((lol )?(yo)?u good( (there )?(my )?(epic )?(bro|dude|sis|buddy|mate|m8|gamer)?)?\??))$", without_ping):
+  if re.match(r"^(status|((lol )?(yo)?u good( (there )?(my )?(epic )?(bro|dude|sis|buddy|mate|m8|gamer)?)?\??))$", without_ping):
     if random.random() < 0.01:
       return f"{reply} Help me, hyper-neutrino trapped me in a bot! Please let me out!"
     else:
       return f"{reply} I am doing {random.choice(['spectacularly', 'amazingly', 'wonderfully', 'excellently', 'great', 'well'])}."
-  if re.match(r"\s+(h[ea]lp|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
+  if re.match(r"(h[ea]lp|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
     return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com). [GitHub Repository](https://github.com/Vyxal/Vyxal/). [GitHub Organization](https://github.com/Vyxal/). [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md). [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt). [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
-  if re.match(r"\s+(please|pl[sz]) (run this vyxal code|gi(ve|b) lyxal link$)", without_ping):
+  if re.match(r"^(please|pl[sz]) (run this vyxal code|gi(ve|b) lyxal link$)", without_ping):
     return f"{reply} [Try it Online!](https://lyxal.pythonanywhere.com?flags=&code=lyxal&inputs=&header=&footer=)"
-  if re.match(r"\s+roll a die$", without_ping):
+  if re.match(r"^roll a die$", without_ping):
     return f"{reply} rolled a {random.randint(1, 6)}!"
-  if re.match(r"who('s| is) joe\??", without_ping):
+  if re.match(r"^who('s| is) joe\??", without_ping):
     return f"{reply} {random.choice(['JOE MAMA LMAO REKT!!!', 'I don\'t know, who?', 'That\'s me, how did you know?'])}!"
-  if re.match(r"\s+roll( a)? \d*d\d+(\s*\+\s*\d*d\d+)*(\s*[+-]\s*\d+)?$", without_ping):
+  if re.match(r"^roll( a)? \d*d\d+(\s*\+\s*\d*d\d+)*(\s*[+-]\s*\d+)?$", without_ping):
     dice = re.findall(r"\d*d\d+", without_ping)
     end = re.search(r"[+-]\s*\d+$", without_ping)
     value = 0
@@ -146,23 +146,23 @@ def receive_message():
     return f"{reply} rolled {value}!"
   if re.match(r"\s+blame$", without_ping):
     return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
-  if re.match(r"\s+ping me$", without_ping):
+  if re.match(r"^\s+ping me$", without_ping):
     STORAGE["pings"].append(message["user_name"].replace(" ", ""))
     save()
     return f"{reply} I have put you on the ping list."
-  if re.match("^" + ping_regex + r"\s+(don't ping me|pingn't me)$", without_ping):
+  if re.match(r"^\s+(don't ping me|pingn't me)$", without_ping):
     try:
       STORAGE["pings"].remove(message["user_name"].replace(" ", ""))
     except:
       pass
     save()
     return f"{reply} I have taken you off of the ping list."
-  if re.match(r"\s+(hyper-?ping|ping every(body|one))$", without_ping):
+  if re.match(r"^\s+(hyper-?ping|ping every(body|one))$", without_ping):
     if STORAGE["pings"]:
       return " ".join("@" + x.replace(" ", "") for x in sorted(set(STORAGE["pings"]))) + " ^"
     else:
       return f"{reply} Nobody is on the ping list."
-  if re.match(r"\s+rm ping", without_ping) and message["user_id"] == 281362:
+  if re.match(r"^\s+rm ping", without_ping) and message["user_id"] == 281362:
     name = content.split("rm ping", 1)[1].strip().replace(" ", "")
     try:
       STORAGE["pings"].remove(name)
@@ -171,10 +171,17 @@ def receive_message():
       pass
     save()
     return f"{reply} done"
-  if re.match(r"\s+add ping", without_ping) and message["user_id"] == 281362:
+  if re.match(r"^\s+add ping", without_ping) and message["user_id"] == 281362:
     STORAGE["pings"].append(content.split("add ping", 1)[1].strip().replace(" ", ""))
     save()
     return f"{reply} done"
+  if re.match(r"^w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??", without_ping):
+    return inspect.cleandoc(f"""
+    Here are my commands:
+    add ping: add yourself to the ping list
+    don't ping me: remove yourself from the ping list
+    TODO
+    """)
   return ""
   
 @app.route("/", methods = ["POST"])
