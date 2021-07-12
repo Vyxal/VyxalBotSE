@@ -176,10 +176,11 @@ def receive_message():
     return f"{reply} done"
   if re.match(r"^w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??", without_ping):
     return inspect.cleandoc(f"""
-    Here are my commands:
-    add ping: add yourself to the ping list
-    don't ping me: remove yourself from the ping list
-    TODO
+    {reply} Here are my commands:
+    To add yourself to the ping list, use "add ping"
+    To remove yourself to the ping list, use "add ping"
+    To evaluate Vyxal code, use "(run|code|evaluate)", followed by code, inputs, and flags inside inline code blocks
+    To ping everyone, use "hyperping" or "ping every(body|one)"
     """)
   return ""
   
