@@ -83,8 +83,7 @@ def execute(flags, code, inputs, header = "", footer = ""):
 def receive_message():
   data = request.json
   if data is None or data.get("secret") != secret.decode("utf-8"):
-    time.sleep(10)
-    return "invalid or missing secret", 401
+    return "", 201
   message = data["message"]
   if message["user_id"] == 296403: return ""
   content = html.unescape(message["content"])
@@ -187,8 +186,7 @@ def receive_message():
 @app.route("/", methods = ["POST"])
 def receive_github_webhook():
   if not str_equals(request.headers.get("X-Hub-Signature-256", ""), "sha256=" + "".join(hex(byte)[2:].zfill(2) for byte in hmac.digest(secret, request.data, "sha256"))):
-    time.sleep(10)
-    return "invalid secret or missing signature", 401
+    return "", 201
   data = request.json
   if "forkee" in data:
     fork = data["forkee"]
