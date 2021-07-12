@@ -1,4 +1,4 @@
-import hmac, html, re
+import hmac, html, json, re
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -18,6 +18,13 @@ def str_equals(x, y):
 
 with open("../configurations/vybot.txt", "rb") as f:
   secret = f.read().strip()
+
+with open("../configurations/vybot.json", "r") as f:
+  STORAGE = json.load(f)
+
+def save():
+  with open("../configurations/vybot.json", "w") as f:
+    f.write(json.dumps(STORAGE))
 
 def send(message):
   requests.post("http://localhost:5888", headers = {"Content-Type": "application/json"}, json = {
@@ -94,12 +101,14 @@ def receive_message():
       return f"{reply} https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     stdout, stderr = execute(flags, code, inputs)
     output = []
-    if stdout == "" and stderr == "":
-      return f"{reply} (output was empty)"
+    if stdout.strip() == "":
+      if stderr.strip() == "":
+        return f"{reply} (output was empty)"
     else:
       output.extend(stdout.strip("\n").split("\n"))
+      if stderr.strip() != "":
+        output.append("")
     if stderr != "":
-      output.append("")
       output.append("STDERR:")
       output.extend(stderr.strip("\n").split("\n"))
     if len(output) == 1 and len(output[0]) < 450:
@@ -118,6 +127,51 @@ def receive_message():
     return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com). [GitHub Repository](https://github.com/Vyxal/Vyxal/). [GitHub Organization](https://github.com/Vyxal/). [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md). [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt). [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
   if re.match("^" + ping_regex + r"\s+(please|pl[sz]) (run this vyxal code|gi(ve|b) lyxal link)$", content.lower()):
     return f"{reply} [Try it Online!](https://lyxal.pythonanywhere.com?flags=&code=lyxal&inputs=&header=&footer=)"
+  if re.match("^" + ping_regex + r"\s+roll a die$", content.lower()):
+    return f"{reply} rolled a {random.randint(1, 6)}!"
+  if re.match("^" + ping_regex + r"\s+roll( a)? \d*d\d+(\s*\+\s*\d*d\d+)*(\s*[+-]\s*\d+)?$", content.lower()):
+    dice = re.findall(r"\d*d\d+", content.lower())
+    end = re.search(r"[+-]\s*\d+$", content.lower())
+    value = 0
+    for die in dice:
+      a, b = die.split("d")
+      if a == "": a = 1
+      a, b = int(a), int(b)
+      value += sum(random.randint(1, b) for _ in range(int(a)))
+    if end:
+      value += int("".join(end.group().split()))
+    return f"{reply} rolled {value}!"
+  if re.match("^" + ping_regex + r"\s+blame$", content.lower()):
+    return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
+  if re.match("^" + ping_regex + r"\s+ping me$", content.lower()):
+    STORAGE["pings"].append(message["user_name"].replace(" ", ""))
+    save()
+    return f"{reply} I have put you on the ping list."
+  if re.match("^" + ping_regex + r"\s+(don't ping me|pingn't me)$", content.lower()):
+    try:
+      STORAGE["pings"].remove(message["user_name"].replace(" ", ""))
+    except:
+      pass
+    save()
+    return f"{reply} I have taken you off of the ping list."
+  if re.match("^" + ping_regex + r"\s+(hyper-?ping|ping every(body|one))$", content.lower()):
+    if STORAGE["pings"]:
+      return " ".join("@" + x.replace(" ", "") for x in sorted(set(STORAGE["pings"]))) + " ^"
+    else:
+      return f"{reply} Nobody is on the ping list."
+  if re.match("^" + ping_regex + r"\s+rm ping", content.lower()) and message["user_id"] == 281362:
+    name = content.split("rm ping", 1)[1].strip().replace(" ", "")
+    try:
+      STORAGE["pings"].remove(name)
+    except:
+      print(name + " is not on the ping list.")
+      pass
+    save()
+    return f"{reply} done"
+  if re.match("^" + ping_regex + r"\s+add ping", content.lower()) and message["user_id"] == 281362:
+    STORAGE["pings"].append(content.split("add ping", 1)[1].strip().replace(" ", ""))
+    save()
+    return f"{reply} done"
   return ""
   
 @app.route("/", methods = ["POST"])
