@@ -87,8 +87,8 @@ def receive_message():
   message = data["message"]
   if message["user_id"] == 296403: return ""
   content = html.unescape(message["content"])
-  ping_regex = "@[Vv][Yy][Xx]([Aa]([Ll]([Bb]([Oo][Tt]?)?)?)?)?"
-  match = re.match("^" + ping_regex + r"\s+(exec(ute)?|run|run code|eval(uate)?)(\s*<code>.*?</code>)+", content)
+  ping_regex = "(@[Vv][Yy][Xx]([Aa]([Ll]([Bb]([Oo][Tt]?)?)?)?)? |!!/)"
+  match = re.match("^" + ping_regex + r"\s*(exec(ute)?|run|run code|eval(uate)?)(\s*<code>.*?</code>)+", content)
   reply = f":{message['message_id']}"
   if match:
     data = re.findall("<code>(.*?)</code>", content)
@@ -143,25 +143,25 @@ def receive_message():
     if end:
       value += int("".join(end.group().split()))
     return f"{reply} rolled {value}!"
-  if re.match(r"\s+blame$", without_ping):
+  if re.match(r"\s*blame$", without_ping):
     return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
-  if re.match(r"^\s+ping me$", without_ping):
+  if re.match(r"^\s*ping me$", without_ping):
     STORAGE["pings"].append(message["user_name"].replace(" ", ""))
     save()
     return f"{reply} I have put you on the ping list."
-  if re.match(r"^\s+(don't ping me|pingn't me)$", without_ping):
+  if re.match(r"^\s*(don't ping me|pingn't me)$", without_ping):
     try:
       STORAGE["pings"].remove(message["user_name"].replace(" ", ""))
     except:
       pass
     save()
     return f"{reply} I have taken you off of the ping list."
-  if re.match(r"^\s+(hyper-?ping|ping every(body|one))$", without_ping):
+  if re.match(r"^\s*(hyper-?ping|ping every(body|one))$", without_ping):
     if STORAGE["pings"]:
       return " ".join("@" + x.replace(" ", "") for x in sorted(set(STORAGE["pings"]))) + " ^"
     else:
       return f"{reply} Nobody is on the ping list."
-  if re.match(r"^\s+rm ping", without_ping) and message["user_id"] == 281362:
+  if re.match(r"^\s*rm ping", without_ping) and message["user_id"] == 281362:
     name = content.split("rm ping", 1)[1].strip().replace(" ", "")
     try:
       STORAGE["pings"].remove(name)
@@ -170,17 +170,18 @@ def receive_message():
       pass
     save()
     return f"{reply} done"
-  if re.match(r"^\s+add ping", without_ping) and message["user_id"] == 281362:
+  if re.match(r"^\s*add ping", without_ping) and message["user_id"] == 281362:
     STORAGE["pings"].append(content.split("add ping", 1)[1].strip().replace(" ", ""))
     save()
     return f"{reply} done"
   if re.match(r"^w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??", without_ping):
     return inspect.cleandoc(f"""
-    {reply} Here are my commands:
-    To add yourself to the ping list, use "add ping"
-    To remove yourself to the ping list, use "add ping"
-    To evaluate Vyxal code, use "(run|code|evaluate)", followed by code, inputs, and flags inside inline code blocks
-    To ping everyone, use "hyperping" or "ping every(body|one)"
+    {reply} All of my commands start with @VyxalBot or !!/
+    
+    - To add yourself to the ping list, use "ping me"
+    - To remove yourself from the ping list, use "don't ping me"
+    - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)
+    - To ping everyone, use "hyperping" or "ping every(body|one)"
     """)
   return ""
   
