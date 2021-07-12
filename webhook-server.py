@@ -130,7 +130,7 @@ def receive_message():
   if re.match(r"^roll a die$", without_ping):
     return f"{reply} rolled a {random.randint(1, 6)}!"
   if re.match(r"^who('s| is) joe\??", without_ping):
-    return f"{reply} {random.choice(['JOE MAMA LMAO REKT!!!', 'I don\'t know, who?', 'That\'s me, how did you know?'])}!"
+    return f"{reply} %s!" % random.choice(["JOE MAMA LMAO REKT!!!", "I don't know, who?", "That's me, how did you know?"])
   if re.match(r"^roll( a)? \d*d\d+(\s*\+\s*\d*d\d+)*(\s*[+-]\s*\d+)?$", without_ping):
     dice = re.findall(r"\d*d\d+", without_ping)
     end = re.search(r"[+-]\s*\d+$", without_ping)
@@ -214,7 +214,7 @@ def receive_github_webhook():
     refname = data["ref"][11:]
     if "commits" in data:
       for commit in data["commits"]:
-        send(f"{link(data['sender']['login'])} pushed a commit: _{msgify(commit['message'])}_")
+        send(f"{link(data['sender']['login'])} pushed a [commit]({commit['url']}) to {linkref(refname)}: _{msgify(commit['message'])}_")
     if data["created"]:
       oldref = data["base_ref"][11:]
       send(f"{link(data['sender']['login'])} created branch {linkref(refname)} from {linkref(oldref)}")
