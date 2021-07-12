@@ -35,6 +35,10 @@ def handler(room):
                 hooks[x["message_id"]] = send(r.text)
           except:
             traceback.print_exc()
+        elif x["event_type"] == 10 and x["room_id"] == room:
+          if x["user_id"] == 296403: return
+          if x["message_id"] in hooks:
+            rooms[rid].deleteMessage(hooks[x["message_id"]])
   return _inner
 
 chatbot = Chatbot()

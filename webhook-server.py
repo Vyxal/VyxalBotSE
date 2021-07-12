@@ -95,7 +95,7 @@ def receive_message():
     stdout, stderr = execute(flags, code, inputs)
     output = []
     if stdout == "" and stderr == "":
-      output.append("(stdout was empty)")
+      return f"{reply} (output was empty)"
     else:
       output.extend(stdout.strip("\n").split("\n"))
     if stderr != "":

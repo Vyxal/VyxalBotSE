@@ -221,6 +221,14 @@ class Room():
                         time.sleep(3)
                         self.editMessage(msg, msg_id)
         
+        def deleteMessage(self, msg_id): # delete message with id <msg_id>
+                payload = {"fkey": self.chatbot.fkey}
+                headers = {'Referer': "http://chat.stackexchange.com/rooms/{}".format(self.id)}
+                r = self.chatbot.sendRequest("http://chat.stackexchange.com/messages/{}/delete".format(msg_id), "post", payload, headers).text
+                if r.find("You can perform this action again") >= 0:
+                        time.sleep(3)
+                        self.deleteMessage(msg_id)
+        
 # main class
 class Chatbot():
         def __init__(self, decrypt = None, verbose=True):
