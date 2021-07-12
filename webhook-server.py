@@ -109,7 +109,7 @@ def receive_message():
       return "\n".join("    " + line for line in output)
   if re.match("^" + ping_regex + r"\s+(exec(ute)?|run|run code|eval(uate)?)", content):
     return f"{reply} Did you forget to put backticks around your code (%s)? Remember to escape any backticks in your code (to type %s, enter %s)." % (r"`\`code\``", r"`\`hi\``", "`\`\\\`hi\\\`\``")
-  if re.match("^" + ping_regex + r"\s+(status|((lol )?u good( (there )?(my )?(bro|dude|sis|buddy|mate|m8)?)?\??))", content.lower()):
+  if re.match("^" + ping_regex + r"\s+(status|((lol )?u good( (there )?(my )?(epic )?(bro|dude|sis|buddy|mate|m8|gamer)?)?\??))", content.lower()):
     if random.random() < 0.01:
       return f"{reply} Help me, hyper-neutrino trapped me in a bot! Please let me out!"
     else:
