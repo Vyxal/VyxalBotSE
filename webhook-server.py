@@ -35,7 +35,7 @@ def link(user):
   return f"[{user}](https://github.com/{user})"
 
 def linkref(refname, data):
-  return f"[{refname}]({data['repository']['url']}/tree/{refname})"
+  return f"[{data['repository']['name']}/{refname}]({data['repository']['url']}/tree/{refname})"
 
 def linkissue(issue, caps = True):
   return f"[{'iI'[caps]}ssue #{issue['number']}]({issue['html_url']})"
