@@ -88,7 +88,7 @@ def receive_message():
   if message["user_id"] == 296403: return ""
   content = html.unescape(message["content"])
   ping_regex = "(@[Vv][Yy][Xx]([Aa]([Ll]([Bb]([Oo][Tt]?)?)?)?)? |!!/)"
-  match = re.match("^" + ping_regex + r"\s*(exec(ute)?|run|run code|eval(uate)?)(\s*<code>.*?</code>)+", content)
+  match = re.match("^" + ping_regex + r"(exec(ute)?|run|run code|eval(uate)?)(\s*<code>.*?</code>)+", content)
   reply = f":{message['message_id']}"
   if match:
     data = re.findall("<code>(.*?)</code>", content)
@@ -143,25 +143,25 @@ def receive_message():
     if end:
       value += int("".join(end.group().split()))
     return f"{reply} rolled {value}!"
-  if re.match(r"\s*blame$", without_ping):
+  if re.match(r"blame$", without_ping):
     return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
-  if re.match(r"^\s*ping me$", without_ping):
+  if re.match(r"^ping me$", without_ping):
     STORAGE["pings"].append(message["user_name"].replace(" ", ""))
     save()
     return f"{reply} I have put you on the ping list."
-  if re.match(r"^\s*(don't ping me|pingn't me)$", without_ping):
+  if re.match(r"^(don't ping me|pingn't me)$", without_ping):
     try:
       STORAGE["pings"].remove(message["user_name"].replace(" ", ""))
     except:
       pass
     save()
     return f"{reply} I have taken you off of the ping list."
-  if re.match(r"^\s*(hyper-?ping|ping every(body|one))$", without_ping):
+  if re.match(r"^(hyper-?ping|ping every(body|one))$", without_ping):
     if STORAGE["pings"]:
       return " ".join("@" + x.replace(" ", "") for x in sorted(set(STORAGE["pings"]))) + " ^"
     else:
       return f"{reply} Nobody is on the ping list."
-  if re.match(r"^\s*rm ping", without_ping) and message["user_id"] == 281362:
+  if re.match(r"^rm ping", without_ping) and message["user_id"] == 281362:
     name = content.split("rm ping", 1)[1].strip().replace(" ", "")
     try:
       STORAGE["pings"].remove(name)
@@ -170,7 +170,7 @@ def receive_message():
       pass
     save()
     return f"{reply} done"
-  if re.match(r"^\s*add ping", without_ping) and message["user_id"] == 281362:
+  if re.match(r"^add ping", without_ping) and message["user_id"] == 281362:
     STORAGE["pings"].append(content.split("add ping", 1)[1].strip().replace(" ", ""))
     save()
     return f"{reply} done"
@@ -222,6 +222,9 @@ def receive_github_webhook():
       send(f"{link(data['sender']['login'])} created branch {linkref(refname, data)} from {linkref(oldref, data)}")
     elif data["deleted"]:
       send(f"{link(data['sender']['login'])} deleted branch {refname}")
+  elif data.get("action") == "create" and "alert" in data:
+    alert = data["alert"]
+    send(f"**security alert** ({alert['severity']}) created by {link(data['sender']['login'])} in [{data['repository']['name']}]({data['repository']['html_url']}) (affected package: _{msgify(alert['affected_package_name'])} {alert['affected_range']})")
   return ""
 
 if __name__ == "__main__":
