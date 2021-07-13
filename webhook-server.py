@@ -1,4 +1,4 @@
-import hmac, html, json, re
+import hmac, html, json, os, re
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -31,7 +31,7 @@ def send(message, **data):
     "message": message,
     **data
   })
-  
+
 def link(user):
   return f"[{user}](https://github.com/{user})"
 
@@ -209,6 +209,13 @@ def receive_message():
       return f"{reply} you are a privileged user"
     else:
       return f"{reply} you are not a privileged user; ask someone if you believe you should be (user id: {message['user_id']})"
+  if re.match(r"^pull$", without_ping):
+    if message["user_id"] in STORAGE["privileged"]:
+      send(f"{reply} pulling new changes; I will restart in a few seconds if any updates are available")
+      os.system("git pull")
+      return ""
+    else:
+      return f"{reply} you are not a privileged user; ask someone if you beleive you should be (user id: {message['user_id']})"
   match = re.match(r"^(pro|de)mote (\d+)", without_ping)
   if match:
     if message["user_id"] not in STORAGE["admin"]:
