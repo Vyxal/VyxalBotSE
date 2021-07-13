@@ -88,7 +88,7 @@ def receive_message():
   if message["user_id"] == 296403: return ""
   content = html.unescape(message["content"])
   ping_regex = "(@[Vv][Yy][Xx]([Aa]([Ll]([Bb]([Oo][Tt]?)?)?)?)? |!!/)"
-  match = re.match("^" + ping_regex + r"(exec(ute)?|run|run code|eval(uate)?)(\s*<code>.*?</code>)+", content)
+  match = re.match("^" + ping_regex + r"\s*(exec(ute)?|run|run code|eval(uate)?)(\s*<code>.*?</code>)+", content)
   reply = f":{message['message_id']}"
   if match:
     data = re.findall("<code>(.*?)</code>", content)
