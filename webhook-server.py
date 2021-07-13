@@ -229,8 +229,6 @@ def receive_message():
       if uid in STORAGE["privileged"]:
         STORAGE["privileged"].remove(uid)
     return f"{reply} {action}moted user #{uid}"
-  if re.match("^test$", without_ping):
-    return f"{reply} owo"
   return ""
 
 @app.route("/repo", methods = ["POST"])
