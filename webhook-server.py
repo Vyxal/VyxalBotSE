@@ -184,7 +184,35 @@ def receive_message():
     - To ping everyone, use "hyperping" or "ping every(body|one)"
     """)
   return ""
-  
+
+@app.route("/repo", methods = ["POST"])
+def receive_repository_webhook():
+  if not str_equals(request.headers.get("X-Hub-Signature-256", ""), "sha256=" + "".join(hex(byte)[2:].zfill(2) for byte in hmac.digest(secret, request.data, "sha256"))):
+    return "", 201
+  data = request.json
+  action = data["action"]
+  repo = data["repository"]
+  user = data["sender"]["login"]
+  if action == "created":
+    send(f"{link(user)} created a new repository: {linkrepo(repo)}")
+  elif action == "deleted":
+    send(f"{link(user)} deleted a repository: {repo['full_name']}")
+    if repo["full_name"] == "Vyxal/Vyxal":
+      send("@lyxal @AaronMiller @Razetime @user @Ausername @hyper-neutrino **NOTICE**: Potential catastrophic failure. It appears that the Vyxal/Vyxal repository has been deleted.")
+  elif action == "archived":
+    send(f"{link(user)} archived {linkrepo(repo)}")
+    if repo["full_name"] == "Vyxal/Vyxal":
+      send("@lyxal @hyper-neutrino It appears that the Vyxal/Vyxal repository was archived. Please review recent activity.")
+  elif action == "unarchived":
+    send(f"{link(user)} unarchived {linkrepo(repo)}")
+  elif action == "publicized":
+    send(f"{link(user)} publicized {linkrepo(repo)}")
+  elif action == "privatized":
+    send(f"{link(user)} privatized {linkrepo(repo)}")
+    if repo["full_name"] == "Vyxal/Vyxal":
+      send("@lyxal It appears that the Vyxal/Vyxal repository was privatized. Please reivew this change.")
+  return ""
+
 @app.route("/", methods = ["POST"])
 def receive_github_webhook():
   if not str_equals(request.headers.get("X-Hub-Signature-256", ""), "sha256=" + "".join(hex(byte)[2:].zfill(2) for byte in hmac.digest(secret, request.data, "sha256"))):
@@ -196,22 +224,22 @@ def receive_github_webhook():
   if "issue" in data:
     issue = data["issue"]
     if data["action"] == "opened":
-      send(f"{link(data['sender']['login'])} opened {linkissue(issue, False)}: _{msgify(issue['title'])}_")
+      send(f"{link(data['sender']['login'])} opened {linkissue(issue, False)} in {linkrepo(data['repository'])}: _{msgify(issue['title'])}_")
     elif data["action"] == "reopened":
-      send(f"{linkissue(issue)} was reopened by {link(data['sender']['login'])}")
+      send(f"{linkissue(issue)} ({linkrepo(data['repository'])}) was reopened by {link(data['sender']['login'])}")
     elif data["action"] == "closed":
-      send(f"{linkissue(issue)} was closed by {link(data['sender']['login'])}")
+      send(f"{linkissue(issue)} ({linkrepo(data['repository'])}) was closed by {link(data['sender']['login'])}")
     elif data["action"] == "edited":
-      send(f"{linkissue(issue)} was edited by {link(data['sender']['login'])}")
+      send(f"{linkissue(issue)} ({linkrepo(data['repository'])}) was edited by {link(data['sender']['login'])}")
   if data.get("action") in ["opened", "reopened"] and "pull_request" in data:
     pr = data["pull_request"]
-    send(f"[PR #{data['number']}]({pr['html_url']}) {data['action']} by {link(data['sender']['login'])} from {pr['head']['label']} into {pr['base']['label']}: _{msgify(pr['title'])}_")
+    send(f"[PR #{data['number']}]({pr['html_url']}) ({linkrepo(data['repository'])}) {data['action']} by {link(data['sender']['login'])} from {pr['head']['label']} into {pr['base']['label']}: _{msgify(pr['title'])}_")
   elif data.get("action") == "closed" and "pull_request" in data:
     pr = data["pull_request"]
     if pr["merged"]:
-      send(f"[PR #{data['number']}]({pr['html_url']}) was merged by {link(data['sender']['login'])} from {pr['head']['label']} into {pr['base']['label']}: _{msgify(pr['title'])}_")
+      send(f"[PR #{data['number']}]({pr['html_url']}) ({linkrepo(data['repository'])}) was merged by {link(data['sender']['login'])} from {pr['head']['label']} into {pr['base']['label']}: _{msgify(pr['title'])}_")
     else:
-      send(f"[PR #{data['number']}]({pr['html_url']}) was closed by {link(data['sender']['login'])} with unmerged commits.")
+      send(f"[PR #{data['number']}]({pr['html_url']}) ({linkrepo(data['repository'])}) was closed by {link(data['sender']['login'])} with unmerged commits.")
   elif data.get("ref", "").startswith("refs/heads/"):
     refname = data["ref"][11:]
     if "commits" in data:
@@ -221,10 +249,10 @@ def receive_github_webhook():
       oldref = data["base_ref"][11:]
       send(f"{link(data['sender']['login'])} created branch {linkref(refname, data)} from {linkref(oldref, data)}")
     elif data["deleted"]:
-      send(f"{link(data['sender']['login'])} deleted branch {refname}")
+      send(f"{link(data['sender']['login'])} deleted branch {data['repository']['name']}/{refname}")
   elif data.get("action") == "create" and "alert" in data:
     alert = data["alert"]
-    send(f"**security alert** ({alert['severity']}) created by {link(data['sender']['login'])} in [{data['repository']['name']}]({data['repository']['html_url']}) (affected package: _{msgify(alert['affected_package_name'])} {alert['affected_range']})")
+    send(f"**security alert** ({alert['severity']}) created by {link(data['sender']['login'])} in {linkrepo(data['repository'])}) (affected package: _{msgify(alert['affected_package_name'])} {alert['affected_range']})")
   return ""
 
 if __name__ == "__main__":
