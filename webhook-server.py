@@ -300,7 +300,7 @@ def receive_github_webhook():
     alert = data["alert"]
     send(f"**security alert** ({alert['severity']}) created by {link(data['sender']['login'])} in {linkrepo(data['repository'])}) (affected package: _{msgify(alert['affected_package_name'])} {alert['affected_range']})")
   elif data.get("action") == "published" and "release" in data:
-    send(f"[**{data['release']['name'] or data['release']['tag_name']}**]({data['release']['html_url']}) ({linkrepo(data['repository'])})", pin = data["repository"]["full_name"] == "Vyxal/Vyxal")
+    send(f"[**{data['release']['name'] or data['release']['tag_name']}**]({data['release']['html_url']})", pin = data["repository"]["full_name"] == "Vyxal/Vyxal")
   return ""
 
 if __name__ == "__main__":
