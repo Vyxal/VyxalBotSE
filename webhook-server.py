@@ -26,9 +26,10 @@ def save():
   with open("../configurations/vybot.json", "w") as f:
     f.write(json.dumps(STORAGE))
 
-def send(message):
+def send(message, **data):
   requests.post("http://localhost:5888", headers = {"Content-Type": "application/json"}, json = {
-    "message": message
+    "message": message,
+    **data
   })
   
 def link(user):
@@ -129,8 +130,6 @@ def receive_message():
     return f"{reply} [Try it Online!](https://lyxal.pythonanywhere.com?flags=&code=lyxal&inputs=&header=&footer=)"
   if re.match(r"^roll a die$", without_ping):
     return f"{reply} rolled a {random.randint(1, 6)}!"
-  if re.match(r"^who('s| is) joe\??", without_ping):
-    return f"{reply} %s!" % random.choice(["JOE MAMA LMAO REKT!!!", "I don't know, who?", "That's me, how did you know?"])
   if re.match(r"^roll( a)? \d*d\d+(\s*\+\s*\d*d\d+)*(\s*[+-]\s*\d+)?$", without_ping):
     dice = re.findall(r"\d*d\d+", without_ping)
     end = re.search(r"[+-]\s*\d+$", without_ping)
@@ -185,6 +184,8 @@ def receive_message():
     """)
   match = re.match(r"^issue\s+((.+?)\s+)?<b>(.+?)</b>\s*(.*?)(\s+<code>.+?</code>)+$", without_ping)
   if match:
+    if message["user_id"] not in STORAGE["privileged"]:
+      return f"{reply} you are not a privileged user; ask someone to grant you permissions if you believe you should have them (user id: {message['user_id']})"
     _, repo, title, body, tags = match.groups()
     repo = repo or "Vyxal"
     tags = re.findall("<code>(.+?)</code>", without_ping)
@@ -203,6 +204,24 @@ def receive_message():
     return ""
   if re.match(r"^issue", without_ping):
     return f"{reply} " + r"`!!/issue repository **title** body \`label\` \`label\`` - if the repository is not specified, it assumes `Vyxal/Vyxal`; the body can be omitted but it is recommended that you write a description; at least one label is required"
+  if re.match(r"^am ?i ?privileged\??", without_ping):
+    if message["user_id"] in STORAGE["privileged"]:
+      return f"{reply} you are a privileged user"
+    else:
+      return f"{reply} you are not a privileged user; ask someone if you believe you should be (user id: {message['user_id']})"
+  match = re.match(r"^(pro|de)mote (\d+)", without_ping)
+  if match:
+    if message["user_id"] not in STORAGE["admin"]:
+      return f"{reply} you are not an admin!"
+    action, uid = match.groups()
+    uid = int(uid)
+    if action == "pro":
+      if uid not in STORAGE["privileged"]:
+        STORAGE["privileged"].append(uid)
+    else:
+      if uid in STORAGE["privileged"]:
+        STORAGE["privileged"].remove(uid)
+    return f"{reply} {action}moted user #{uid}"
   return ""
 
 @app.route("/repo", methods = ["POST"])
@@ -273,6 +292,8 @@ def receive_github_webhook():
   elif data.get("action") == "create" and "alert" in data:
     alert = data["alert"]
     send(f"**security alert** ({alert['severity']}) created by {link(data['sender']['login'])} in {linkrepo(data['repository'])}) (affected package: _{msgify(alert['affected_package_name'])} {alert['affected_range']})")
+  elif data.get("action") == "published" and "release" in data:
+    send(f"[**{data['release']['name'] or data['release']['tag_name']}**]({data['release']['html_url']}) ({linkrepo(data['repository'])})", pin = data["repository"]["full_name"] == "Vyxal/Vyxal")
   return ""
 
 if __name__ == "__main__":

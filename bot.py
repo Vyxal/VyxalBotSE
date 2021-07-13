@@ -65,7 +65,14 @@ def send(message):
 @app.route("/", methods = ["POST"])
 def post_message():
   data = request.json
-  send(data["message"])
+  msg = send(data["message"])
+  if data.get("pin"):
+    chatbot.sendRequest(f"http://chat.stackexchange.com/messages/{msg}/owner-star", "post", {
+      "fkey": chatbot.fkey
+    }, headers = {
+      "Referer": f"http://chat.stackexchange.com/rooms/{rid}",
+      "Origin": "http://chat.stackexchange.com"
+    })
   return ""
 
 if __name__ == "__main__":
