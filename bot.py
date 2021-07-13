@@ -14,8 +14,13 @@ hooks = {}
   
 def handler(room):
   def _inner(activity):
+    if room != rid: return
     if "e" in activity:
       for x in activity["e"]:
+        if x["user_id"] == 281362 and x["content"] == "!!/swap-rooms":
+          send("I am now leaving this room. Goodbye!")
+          swap()
+          send("Hello! I am now operating in this room.")
         if x["event_type"] == 1 and x["room_id"] == room:
           if x["user_id"] == 296403: return
           try:
@@ -46,8 +51,12 @@ chatbot.login()
 
 rid = 106764
 
+def swap():
+  global rid
+  rid = 106765 - rid
+
 rooms = {
-  k: chatbot.joinRoom(k, handler(k)) for k in [rid]
+  k: chatbot.joinRoom(k, handler(k)) for k in [1, 106764]
 }
 
 def send(message):

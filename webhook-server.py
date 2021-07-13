@@ -183,6 +183,26 @@ def receive_message():
     - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)
     - To ping everyone, use "hyperping" or "ping every(body|one)"
     """)
+  match = re.match(r"^issue\s+((.+?)\s+)?<b>(.+?)</b>\s*(.*?)(\s+<code>.+?</code>)+$", without_ping)
+  if match:
+    _, repo, title, body, tags = match.groups()
+    repo = repo or "Vyxal"
+    tags = re.findall("<code>(.+?)</code>", without_ping)
+    r = requests.post(f"https://api.github.com/repos/Vyxal/{repo}/issues", headers = {
+      "Authorization": "token " + STORAGE["token"],
+      "Accept": "application/vnd.github.v3+json"
+    }, data = json.dumps({
+      "title": title,
+      "body": body,
+      "labels": tags
+    }))
+    if r.status_code == 404:
+      return f"{reply} failed to create the issue (404); make sure you have spelled the repository name correctly"
+    elif r.status_code != 201:
+      return f"{reply} failed to create the issue ({r.status_code}): {r.json()['message']}"
+    return ""
+  if re.match(r"^issue", without_ping):
+    return f"{reply} " + r"`!!/issue repository **title** body \`label\` \`label\`` - if the repository is not specified, it assumes `Vyxal/Vyxal`; the body can be omitted but it is recommended that you write a description; at least one label is required"
   return ""
 
 @app.route("/repo", methods = ["POST"])
