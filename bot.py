@@ -11,26 +11,29 @@ with open("../configurations/vybot.txt", "r") as f:
   secret = f.read().strip()
 
 hooks = {}
-  
+
 def handler(room):
   def _inner(activity):
     if room != rid: return
     if "e" in activity:
       for x in activity["e"]:
-        if x["user_id"] == 281362 and x["content"] == "!!/swap-rooms":
+        print(x)
+        if x["user_id"] == 281362 and x.get("content") == "!!/swap-rooms":
           send("I am now leaving this room. Goodbye!")
           swap()
           send("Hello! I am now operating in this room.")
+
         if x["event_type"] == 1 and x["room_id"] == room:
-          if x["user_id"] == 296403: return
+          if x["user_id"] == 296403: continue
           try:
             r = requests.post("http://localhost:5666/msg", headers = {"Content-Type": "application/json"}, json = {"secret": secret, "message": x})
             if r.status_code == 200 and r.text:
               hooks[x["message_id"]] = send(r.text)
           except:
             traceback.print_exc()
-        elif x["event_type"] == 2 and x["room_id"] == room:
-          if x["user_id"] == 296403: return
+
+        if x["event_type"] == 2 and x["room_id"] == room:
+          if x["user_id"] == 296403: continue
           try:
             r = requests.post("http://localhost:5666/msg", headers = {"Content-Type": "application/json"}, json = {"secret": secret, "message": x})
             if r.status_code == 200 and r.text:
@@ -40,8 +43,15 @@ def handler(room):
                 hooks[x["message_id"]] = send(r.text)
           except:
             traceback.print_exc()
-        elif x["event_type"] == 10 and x["room_id"] == room:
-          if x["user_id"] == 296403: return
+
+        if x["event_type"] == 3 and x["room_id"] == room:
+          if x["user_id"] == 296403: continue
+          r = requests.post("http://localhost:5666/join", headers = {"Content-Type": "application/json"}, json = {"secret": secret, "data": x})
+          if r.status_code == 200 and r.text:
+            send(r.text)
+
+        if x["event_type"] == 10 and x["room_id"] == room:
+          if x["user_id"] == 296403: continue
           if x["message_id"] in hooks:
             rooms[rid].deleteMessage(hooks[x["message_id"]])
   return _inner

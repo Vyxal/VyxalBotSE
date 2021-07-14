@@ -82,6 +82,18 @@ def execute(flags, code, inputs, header = "", footer = ""):
   else:
     return ("", f"[POST /execute] returned {r.status_code}")
 
+@app.route("/join", methods = ["POST"])
+def receive_join():
+  data = request.json
+  if data is None or data.get("secret") != secret.decode("utf-8") or data["data"]["room_id"] != 106764:
+    return "", 201
+  user = data["data"]["user_id"]
+  if user not in STORAGE["visited"]:
+    STORAGE["visited"].append(user)
+    save()
+    return f"@{data['data']['user_name'].replace(' ', '')} Welcome to the Vyxal chat room!"
+  return ""
+
 @app.route("/msg", methods = ["POST"])
 def receive_message():
   data = request.json
@@ -167,11 +179,11 @@ def receive_message():
       - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)
       - To ping everyone, use "hyperping" or "ping every(body|one)"
       """)
-    match = re.match(r"^issue\s+((.+?)\s+)?<b>(.+?)</b>\s*(.*?)(\s+<code>.+?</code>)+$", without_ping)
+    match = re.match(r"^" + ping_regex + r"issue\s+((.+?)\s+)?<b>(.+?)</b>\s*(.*?)(\s+<code>.+?</code>)+$", content)
     if match:
       if message["user_id"] not in STORAGE["privileged"]:
         return f"{reply} you are not a privileged user; ask someone to grant you permissions if you believe you should have them (user id: {message['user_id']})"
-      _, repo, title, body, tags = match.groups()
+      _, repo, title, body, tags = match.groups()[-5:]
       repo = repo or "Vyxal"
       tags = re.findall("<code>(.+?)</code>", without_ping)
       r = requests.post(f"https://api.github.com/repos/Vyxal/{repo}/issues", headers = {
@@ -298,4 +310,3 @@ def receive_github_webhook():
 
 if __name__ == "__main__":
   app.run(host = "127.0.0.1", port = 5666, debug = True)
-{"mode":"full","isActive":false}
