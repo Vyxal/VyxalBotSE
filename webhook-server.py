@@ -126,8 +126,8 @@ def receive_message():
       return f"{reply} Help me, hyper-neutrino trapped me in a bot! Please let me out!"
     else:
       return f"{reply} I am doing {random.choice(['spectacularly', 'amazingly', 'wonderfully', 'excellently', 'great', 'well', 'poggers', 'you', 'nothing except answering your requests'])}."
-  if re.match(r"^(inf(ro|or)(mate?ion)?|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
-    return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com) | [GitHub Repository](https://github.com/Vyxal/Vyxal/) | [GitHub Organization](https://github.com/Vyxal/) | [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md) | [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt) | [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
+  if re.match(r"^(info|inf(ro|or)(mate?ion)?|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
+    return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com) | [GitHub Repository](https://github.com/Vyxal/Vyxal/) | [GitHub Organization](https://github.com/Vyxal/) | [Vyxapedia](https://vyxapedia.hyper-neutrino.xyz) | [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md) | [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt) | [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
   if re.match(r"^ping me$", without_ping):
     STORAGE["pings"].append(message["user_name"].replace(" ", ""))
     save()
