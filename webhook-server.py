@@ -49,7 +49,7 @@ def msgify(text):
 
 def execute(flags, code, inputs, header = "", footer = ""):
   if isinstance(inputs, (list, tuple)): inputs = "\n".join(inputs)
-    
+
   payload = {
     "flags": flags,
     "code": code,
@@ -57,9 +57,9 @@ def execute(flags, code, inputs, header = "", footer = ""):
     "header": header,
     "footer": footer
   }
-  
+
   session = requests.Session()
-  
+
   r = session.get("https://lyxal.pythonanywhere.com")
   if r.status_code == 200:
     start = r.text.find("<session-code>")
@@ -69,7 +69,7 @@ def execute(flags, code, inputs, header = "", footer = ""):
     payload["session"] = r.text[start + 14 : end]
   else:
     return ("", f"[GET /] returned {r.status_code}")
-  
+
   r = session.post("https://lyxal.pythonanywhere.com/execute", data = payload)
   if r.status_code == 200:
     try:
@@ -124,7 +124,7 @@ def receive_message():
       return f"{reply} Help me, hyper-neutrino trapped me in a bot! Please let me out!"
     else:
       return f"{reply} I am doing {random.choice(['spectacularly', 'amazingly', 'wonderfully', 'excellently', 'great', 'well'])}."
-  if re.match(r"^(infr?o(mate?ion)?|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
+  if re.match(r"^(inf(ro|or)(mate?ion)?|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
     return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com). [GitHub Repository](https://github.com/Vyxal/Vyxal/). [GitHub Organization](https://github.com/Vyxal/). [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md). [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt). [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
   if re.match(r"^ping me$", without_ping):
     STORAGE["pings"].append(message["user_name"].replace(" ", ""))
@@ -158,7 +158,7 @@ def receive_message():
   if re.match(r"^(w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??|h[ea]lp( pl[sz])?)", without_ping):
     return inspect.cleandoc(f"""
     {reply} All of my commands start with @VyxalBot or !!/
-    
+
     - To add yourself to the ping list, use "ping me"
     - To remove yourself from the ping list, use "don't ping me"
     - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)
