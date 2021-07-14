@@ -211,6 +211,8 @@ def receive_message():
       if uid in STORAGE["privileged"]:
         STORAGE["privileged"].remove(uid)
     return f"{reply} {action}moted user #{uid}"
+  if re.match(r"blame$", without_ping):
+    return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
   return ""
 
 @app.route("/repo", methods = ["POST"])
