@@ -231,7 +231,7 @@ def receive_message():
         return f"{reply} done"
     if re.match(
         r"^w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??", without_ping
-    ) or re.match(r"h[ea]lp( pl[sz])?"):
+    ) or re.match(r"h[ea]lp", without_ping):
         return inspect.cleandoc(
             f"""
     {reply} All of my commands start with @VyxalBot or !!/
