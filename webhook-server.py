@@ -165,7 +165,8 @@ def receive_message():
         else:
             return f"{reply} I am doing {random.choice(['spectacularly', 'amazingly', 'wonderfully', 'excellently', 'great', 'well'])}."
     if re.match(
-        r"(h[ea]lp|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping
+        r"(infr?o(mate?ion)?|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$",
+        without_ping,
     ):
         return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com). [GitHub Repository](https://github.com/Vyxal/Vyxal/). [GitHub Organization](https://github.com/Vyxal/). [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md). [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt). [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
     if re.match(
@@ -230,11 +231,11 @@ def receive_message():
         return f"{reply} done"
     if re.match(
         r"^w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??", without_ping
-    ):
+    ) or re.match(r"h[ea]lp( pl[sz])?"):
         return inspect.cleandoc(
             f"""
     {reply} All of my commands start with @VyxalBot or !!/
-    
+
     - To add yourself to the ping list, use "ping me"
     - To remove yourself from the ping list, use "don't ping me"
     - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)
