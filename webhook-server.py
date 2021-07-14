@@ -192,12 +192,12 @@ def receive_message():
     else:
       return f"{reply} you are not a privileged user; ask someone if you believe you should be (user id: {message['user_id']})"
   if re.match(r"^pull$", without_ping):
-    if message["user_id"] in STORAGE["privileged"]:
+    if message["user_id"] in STORAGE["admin"]:
       send(f"{reply} pulling new changes; I will restart in a few seconds if any updates are available")
       os.system("git pull")
       return ""
     else:
-      return f"{reply} you are not a privileged user; ask someone if you beleive you should be (user id: {message['user_id']})"
+      return f"{reply} you are not an admin!"
   if re.match(r"^blame$", without_ping):
     return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
   if re.match(r"^(hello|howdy|mornin['g]|evenin['g])$", without_ping):
