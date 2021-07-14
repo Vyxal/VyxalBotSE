@@ -124,30 +124,8 @@ def receive_message():
       return f"{reply} Help me, hyper-neutrino trapped me in a bot! Please let me out!"
     else:
       return f"{reply} I am doing {random.choice(['spectacularly', 'amazingly', 'wonderfully', 'excellently', 'great', 'well'])}."
-  if re.match(r"(h[ea]lp|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
+  if re.match(r"^(infr?o(mate?ion)?|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
     return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com). [GitHub Repository](https://github.com/Vyxal/Vyxal/). [GitHub Organization](https://github.com/Vyxal/). [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md). [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt). [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
-#   if re.match(r"^(please|pl[sz]) (run this vyxal code|gi(ve|b) lyxal link$)", without_ping):
-#     return f"{reply} [Try it Online!](https://lyxal.pythonanywhere.com?flags=&code=lyxal&inputs=&header=&footer=)"
-#   if re.match(r"^roll a die$", without_ping):
-#     return f"{reply} rolled a {random.randint(1, 6)}!"
-#   if re.match(r"^roll( a)? \d*d\d+(\s*\+\s*\d*d\d+)*(\s*[+-]\s*\d+)?$", without_ping):
-#     dice = re.findall(r"\d*d\d+", without_ping)
-#     end = re.search(r"[+-]\s*\d+$", without_ping)
-#     value = 0
-#     for die in dice:
-#       a, b = die.split("d")
-#       if a == "": a = 1
-#       a, b = int(a), int(b)
-#       if a > 1000:
-#         return f"{reply} what are you doing with so many dice?"
-#       if b > 1000:
-#         return f"{reply} your die had too many sides and rolled too far away"
-#       value += sum(random.randint(1, b) for _ in range(int(a)))
-#     if end:
-#       value += int("".join(end.group().split()))
-#     return f"{reply} rolled {value}!"
-#   if re.match(r"blame$", without_ping):
-#     return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
   if re.match(r"^ping me$", without_ping):
     STORAGE["pings"].append(message["user_name"].replace(" ", ""))
     save()
@@ -177,7 +155,7 @@ def receive_message():
     STORAGE["pings"].append(content.split("add ping", 1)[1].strip().replace(" ", ""))
     save()
     return f"{reply} done"
-  if re.match(r"^w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??", without_ping):
+  if re.match(r"^(w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??|h[ea]lp( pl[sz])?)", without_ping):
     return inspect.cleandoc(f"""
     {reply} All of my commands start with @VyxalBot or !!/
     
