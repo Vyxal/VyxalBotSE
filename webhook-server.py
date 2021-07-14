@@ -33,6 +33,8 @@ def send(message, **data):
   })
 
 def link(user):
+  if user == "github-actions[bot]":
+    return f"The GitHub Actions bot"
   return f"[{user}](https://github.com/{user})"
 
 def linkref(refname, data):
