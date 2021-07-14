@@ -123,9 +123,9 @@ def receive_message():
     if random.random() < 0.01:
       return f"{reply} Help me, hyper-neutrino trapped me in a bot! Please let me out!"
     else:
-      return f"{reply} I am doing {random.choice(['spectacularly', 'amazingly', 'wonderfully', 'excellently', 'great', 'well'])}."
+      return f"{reply} I am doing {random.choice(['spectacularly', 'amazingly', 'wonderfully', 'excellently', 'great', 'well', 'poggers', 'you', 'nothing except answer your requests'])}."
   if re.match(r"^(inf(ro|or)(mate?ion)?|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
-    return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com). [GitHub Repository](https://github.com/Vyxal/Vyxal/). [GitHub Organization](https://github.com/Vyxal/). [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md). [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt). [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
+    return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com) | [GitHub Repository](https://github.com/Vyxal/Vyxal/) | [GitHub Organization](https://github.com/Vyxal/) | [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md) | [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt) | [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
   if re.match(r"^ping me$", without_ping):
     STORAGE["pings"].append(message["user_name"].replace(" ", ""))
     save()
@@ -198,6 +198,17 @@ def receive_message():
       return ""
     else:
       return f"{reply} you are not a privileged user; ask someone if you beleive you should be (user id: {message['user_id']})"
+  if re.match(r"blame$", without_ping):
+    return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
+ 
+  if re.match(r"(hello|howdy|mornin['g]|evenin['g])", without_ping):
+    return f"{reply} hello to you too!"
+
+  if re.match(r"((good)?bye|see ya\!?|'night|goodnight)", without_ping):
+    return f"{reply} o/"
+
+  if re.match(r"flowey quote", without_ping):
+    return f"{reply} {random.choice(["Howdy, I'm FLOWEY. FLOWEY the FLOWER", "In this world, it's KILL or BE killed.", "Hehehe, you really ARE an idiot.", "Clever...verrrry clever. You think you're really smart, don't you.", "Is this a joke? Are you braindead? RUN INTO THE BULLETS!!!", "I've read every book. I've burned every book. I've won every game. I've lost every game. I've appeased everyone. I've killed everyone. Sets of numbers... Lines of dialog... I've seen them all.", "You...! I'll keep you here no matter what! _Even if it means killing you 1,000,000 times!", "Down here, LOVE is shared through little white... 'friendliness pellets'", "Hehehe... did you REALLY think you could defeat ME?"])}" 
   match = re.match(r"^(pro|de)mote (\d+)", without_ping)
   if match:
     if message["user_id"] not in STORAGE["admin"]:
@@ -211,8 +222,6 @@ def receive_message():
       if uid in STORAGE["privileged"]:
         STORAGE["privileged"].remove(uid)
     return f"{reply} {action}moted user #{uid}"
-  if re.match(r"blame$", without_ping):
-    return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
   return ""
 
 @app.route("/repo", methods = ["POST"])
@@ -289,3 +298,4 @@ def receive_github_webhook():
 
 if __name__ == "__main__":
   app.run(host = "127.0.0.1", port = 5666, debug = True)
+{"mode":"full","isActive":false}
