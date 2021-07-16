@@ -54,7 +54,7 @@ EVENTS = {
         #34: 'Unknown',
 
 }
-        
+
 
 # useful functions
 def log(msg, name="../logs/log.txt",verbose=True): # Logging messages and errors | Appends <msg> to the log <name>, prints if verbose
@@ -134,13 +134,13 @@ class Room():
                 self.id=room_id # room identifier
                 self.chatbot=chatbot # parent chatbot
                 self.onActivity=onActivity # callback for events
-                
+
                 #initialize vars
                 self.thread=None # own thread
                 self.running=False # currently running ?
                 self.ws=None # WebSocket
                 self.temp_path="{}/temp".format(self.id)
-                
+
                 # initialize
                 self.connect_ws() # attempt to connect via WebSockets
                 if not os.path.exists("{}".format(self.id)):
@@ -150,7 +150,7 @@ class Room():
 
         def __repr__(self):
                 return 'Room(id = {})'.format(self.id)
-        
+
         def connect_ws(self):
                 payload={"fkey": self.chatbot.fkey,'roomid': self.id}
                 try:
@@ -163,7 +163,7 @@ class Room():
                 self.thread = threading.Thread(target=self.run)
                 #self.thread.setDaemon(True)
                 self.thread.start()
-                
+
         def run(self):
                 self.running=True
                 while self.running:
@@ -181,12 +181,12 @@ class Room():
                                                         self.handleActivity(a)
                                                 except:
                                                         pass
-        
+
         def leave(self):
                 log("Left room {}".format(self.id))
                 self.running=False
                 self.chatbot.rooms_joined.remove(self)
-        
+
         def handleActivity(self, activity):
                 log('Got activity {}'.format(activity), verbose=False)
                 self.onActivity(activity)
@@ -197,7 +197,7 @@ class Room():
                                 if event['event_type'] > 2:
                                         log('Event: ' + EVENTS[event['event_type']])
                                         log('Event details: ' + str(event))
-                                
+
         def sendMessage(self, msg, wait=False):
                 if not wait: log(msg)
                 payload = {"fkey": self.chatbot.fkey, "text": msg}
@@ -212,7 +212,7 @@ class Room():
                 r = r.json()
                 # log(r)
                 return r["id"]
-        
+
         def editMessage(self, msg, msg_id): # edit message with id <msg_id> to have the new content <msg>
                 payload = {"fkey": self.chatbot.fkey, "text": msg}
                 headers = {'Referer': "http://chat.stackexchange.com/rooms/{}".format(self.id)}
@@ -220,7 +220,7 @@ class Room():
                 if r.find("You can perform this action again") >= 0:
                         time.sleep(3)
                         self.editMessage(msg, msg_id)
-        
+
         def deleteMessage(self, msg_id): # delete message with id <msg_id>
                 payload = {"fkey": self.chatbot.fkey}
                 headers = {'Referer': "http://chat.stackexchange.com/rooms/{}".format(self.id)}
@@ -228,7 +228,7 @@ class Room():
                 if r.find("You can perform this action again") >= 0:
                         time.sleep(3)
                         self.deleteMessage(msg_id)
-        
+
 # main class
 class Chatbot():
         def __init__(self, decrypt = None, verbose=True):
@@ -239,10 +239,10 @@ class Chatbot():
                 self.rooms_joined=[]
                 self.host=None
                 self.decrypt_key = decrypt
-                
+
                 # propagate vars
                 self.verbose=verbose
-        
+
         def sendRequest(self, url, typeR="get", payload={}, headers={},verify=True): # sends a POST/GET request to <url> with arguments <payload>, headers <headers>. Will check SSL if <verify>.
                 r = ""
                 successful, tries = False, 0
@@ -264,10 +264,10 @@ class Chatbot():
                                         return False
                                 tries += 1
                 return r
-                        
+
         def log(self, msg, name="../logs/log.txt"): # Logging messages and errors | Appends <msg> to the log <name>, prints if self.verbose
                 log(msg,name,verbose=self.verbose)
-                
+
         def login(self, host="codegolf.stackexchange.com"): # Login to SE
                 def getField(field, url="", r=""):
                         """gets the hidden field <field> from string <r> ELSE url <url>"""
@@ -283,7 +283,7 @@ class Chatbot():
                 self.log("--- NEW LOGIN ---")
 
                 email, password = get_credidentials(self.decrypt_key)
-                
+
                 # Login to OpenId / CSE
                 fkey=getField("fkey", "https://openid.stackexchange.com/account/login")
                 payload = {"email": email, "password": password, "isSignup":"false", "isLogin":"true","isPassword":"false","isAddLogin":"false","hasCaptcha":"false","ssrc":"head","submitButton":"Log in",
@@ -293,7 +293,7 @@ class Chatbot():
                         log("Logging to SE - FAILURE - aborting")
                         abort()
                 log("Logging to SE - OK")
-                
+
                 payload = {"email": email, "password": password, "ssrc":"head", "fkey": fkey}
                 r = self.sendRequest("https://{}/users/login?ssrc=head&returnurl=https%3a%2f%2f{}%2f".format(host, host),"post",payload).text
                 if r.find('<a href="https://{}/users/logout"'.format(host))<0:
@@ -302,10 +302,10 @@ class Chatbot():
                         log("Loading SE profile - FAILURE -  aborting")
                         abort()
                 log("Loading SE profile - OK")
-                
+
                 # Logs in to all other SE sites
                 self.sendRequest("https://{}/users/login/universal/request".format(host),"post")
-                
+
                 # get chat key
                 r = self.sendRequest("https://chat.stackexchange.com/chats/join/favorite", "get").text
                 p=r.find('<a href="/users/')+len('<a href="/users/')
@@ -314,12 +314,12 @@ class Chatbot():
                 self.fkey=fkey
                 log("Got chat fkey : {}".format(fkey))
                 log("Login to the SE chat successful")
-        
+
         def joinRoom(self,room_id,onActivity): # Join a chatroom
                 r=Room(room_id, self, onActivity)
                 self.rooms_joined.append(r)
                 return r
-        
+
         def leaveAllRooms(self):
                 for room in self.rooms_joined:
                         room.leave()
