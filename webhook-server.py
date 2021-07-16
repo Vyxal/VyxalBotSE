@@ -214,7 +214,7 @@ def receive_message():
       else:
         return f"{reply} you are not an admin!"
     if re.match(r"^blame$", without_ping):
-      return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'].remove(data['data']['user_name']))}'s fault!"
+      return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
     if re.match(r"^(hello|howdy|mornin['g]|evenin['g])$", without_ping):
       return f"{reply} hello to you too!"
     if re.match(r"^((good)?bye|see ya\!?|'night|goodnight)$", without_ping):
