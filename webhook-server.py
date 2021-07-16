@@ -112,7 +112,7 @@ def receive_message():
     else:
       code, flags, *inputs = data
     if code == "lyxal":
-      return f"{reply} https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      return f"{reply} https://www.youtube.com/watch?v=zN_XmUSgUGws"
     stdout, stderr = execute(flags, code, inputs)
     output = []
     if stdout.strip() == "":
