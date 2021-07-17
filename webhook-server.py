@@ -224,6 +224,15 @@ def receive_message():
       return f"{reply} o/"
     if re.match(r"^flowey quote$", without_ping):
       return f"{reply} %s" % random.choice(["Howdy, I'm FLOWEY. FLOWEY the FLOWER", "In this world, it's KILL or BE killed.", "Hehehe, you really ARE an idiot.", "Clever...verrrry clever. You think you're really smart, don't you.", "Is this a joke? Are you braindead? RUN INTO THE BULLETS!!!", "I've read every book. I've burned every book. I've won every game. I've lost every game. I've appeased everyone. I've killed everyone. Sets of numbers... Lines of dialog... I've seen them all.", "You...! I'll keep you here no matter what! _Even if it means killing you 1,000,000 times!", "Down here, LOVE is shared through little white... 'friendliness pellets'", "Hehehe... did you REALLY think you could defeat ME?"])
+    if re.match(r"^repo(sitor(y|ies))? list$", without_ping):
+      r = requests.get(f"https://api.github.com/repos/Vyxal/{repo}/issues", headers = {
+        "Authorization": "token " + STORAGE["token"],
+        "Accept": "application/vnd.github.v3+json"
+      }, data = json.dumps({
+        "type": "public"
+      }))
+      if r.status_code != 200:
+        return f"{reply} " + " | ".join(map(linkrepo, r.json()))
     match = re.match(r"^(pro|de)mote (\d+)", without_ping)
     if match:
       if message["user_id"] not in STORAGE["admin"]:
