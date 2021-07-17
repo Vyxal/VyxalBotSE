@@ -44,6 +44,9 @@ def linkissue(issue, caps = True):
 def linkrepo(repo):
   return f"[{repo['full_name']}]({repo['html_url']})"
 
+def linkteam(team):
+  return f"[{team['name']}]({team['html_url']})"
+
 def msgify(text):
   return text.split("\n")[0].split("\r\f")[0].replace("_", "\\_").replace("*", "\\*").replace("`", "\\`")
 
@@ -261,6 +264,16 @@ def receive_github_webhook():
       send(f"{linkissue(issue)} ({linkrepo(data['repository'])}) was closed by {link(data['sender']['login'])}")
     elif data["action"] == "edited":
       send(f"{linkissue(issue)} ({linkrepo(data['repository'])}) was edited by {link(data['sender']['login'])}")
+  if data.get("action") in ["created", "deleted", "added_to_repository", "removed_from_repository"] and "team" in data:
+    team = data["team"]
+    if data["action"] == "created":
+      send(f"{linkteam(team)} was created by {link(data['sender']['login'])}")
+    elif data["action"] == "deleted":
+      send(f"{linkteam(team)} was deleted by {link(data['sender']['login'])}")
+    elif data["action"] == "added_to_repository":
+      send(f"{linktea(team)} was added to {linkrepo(data['repository'])} by {link(data['sender']['login'])}")
+  elif data["action"] == "remove_from_repository":
+      send(f"{linktea(team)} was removed from {linkrepo(data['repository'])} by {link(data['sender']['login'])}")
   if data.get("action") in ["opened", "reopened"] and "pull_request" in data:
     pr = data["pull_request"]
     send(f"[PR #{data['number']}]({pr['html_url']}) ({linkrepo(data['repository'])}) {data['action']} by {link(data['sender']['login'])} from {pr['head']['label']} into {pr['base']['label']}: _{msgify(pr['title'])}_")
