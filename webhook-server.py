@@ -33,6 +33,8 @@ def send(message, **data):
   })
 
 def link(user):
+  if user == "github-actions[bot]":
+    return f"The GitHub Actions bot"
   return f"[{user}](https://github.com/{user})"
 
 def linkref(refname, data):
@@ -83,6 +85,18 @@ def execute(flags, code, inputs, header = "", footer = ""):
   else:
     return ("", f"[POST /execute] returned {r.status_code}")
 
+@app.route("/join", methods = ["POST"])
+def receive_join():
+  data = request.json
+  if data is None or data.get("secret") != secret.decode("utf-8") or data["data"]["room_id"] != 106764:
+    return "", 201
+  user = data["data"]["user_id"]
+  if user not in STORAGE["visited"]:
+    STORAGE["visited"].append(user)
+    save()
+    return f"@{data['data']['user_name'].replace(' ', '')} Welcome to the Vyxal chat room!"
+  return ""
+
 @app.route("/msg", methods = ["POST"])
 def receive_message():
   data = request.json
@@ -119,103 +133,110 @@ def receive_message():
     else:
       output.insert(0, f"[@{message['user_name'].replace(' ', '')}: {message['message_id']}]")
       return "\n".join("    " + line for line in output)
-  without_ping = re.sub("^" + ping_regex, "", content.lower()).strip()
-  if re.match(r"^(exec(ute)?|run|run code|eval(uate)?)", without_ping):
-    return f"{reply} Did you forget to put backticks around your code (%s)? Remember to escape any backticks in your code (to type %s, enter %s)." % (r"`\`code\``", r"`\`hi\``", "`\`\\\`hi\\\`\``")
-  if re.match(r"^(status|((lol )?(yo)?u good( (there )?(my )?(epic )?(bro|dude|sis|buddy|mate|m8|gamer)?)?\??))$", without_ping):
-    if random.random() < 0.01:
-      return f"{reply} Help me, hyper-neutrino trapped me in a bot! Please let me out!"
-    else:
-      return f"{reply} I am doing {random.choice(['spectacularly', 'amazingly', 'wonderfully', 'excellently', 'great', 'well'])}."
-  if re.match(r"^(inf(ro|or)(mate?ion)?|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
-    return f"{reply} [Online Interpreter](https://lyxal.pythonanywhere.com). [GitHub Repository](https://github.com/Vyxal/Vyxal/). [GitHub Organization](https://github.com/Vyxal/). [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md). [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt). [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md)."
-  if re.match(r"^ping me$", without_ping):
-    STORAGE["pings"].append(message["user_name"].replace(" ", ""))
-    save()
-    return f"{reply} I have put you on the ping list."
-  if re.match(r"^(don't ping me|pingn't me)$", without_ping):
-    try:
-      STORAGE["pings"].remove(message["user_name"].replace(" ", ""))
-    except:
-      pass
-    save()
-    return f"{reply} I have taken you off of the ping list."
-  if re.match(r"^(hyper-?ping|ping every(body|one))$", without_ping):
-    if STORAGE["pings"]:
-      return " ".join("@" + x.replace(" ", "") for x in sorted(set(STORAGE["pings"]))) + " ^"
-    else:
-      return f"{reply} Nobody is on the ping list."
-  if re.match(r"^rm ping", without_ping) and message["user_id"] == 281362:
-    name = content.split("rm ping", 1)[1].strip().replace(" ", "")
-    try:
-      STORAGE["pings"].remove(name)
-    except:
-      print(name + " is not on the ping list.")
-      pass
-    save()
-    return f"{reply} done"
-  if re.match(r"^add ping", without_ping) and message["user_id"] == 281362:
-    STORAGE["pings"].append(content.split("add ping", 1)[1].strip().replace(" ", ""))
-    save()
-    return f"{reply} done"
-  if re.match(r"^(w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??|h[ea]lp( pl[sz])?)", without_ping):
-    return inspect.cleandoc(f"""
-    {reply} All of my commands start with @VyxalBot or !!/
+  if re.match("^" + ping_regex, content.lower()):
+    without_ping = re.sub("^" + ping_regex, "", content.lower()).strip()
+    if re.match(r"^(exec(ute)?|run|run code|eval(uate)?)", without_ping):
+      return f"{reply} Did you forget to put backticks around your code (%s)? Remember to escape any backticks in your code (to type %s, enter %s)." % (r"`\`code\``", r"`\`hi\``", "`\`\\\`hi\\\`\``")
+    if re.match(r"^(status|((lol )?(yo)?u good( (there )?(my )?(epic )?(bro|dude|sis|buddy|mate|m8|gamer)?)?\??))$", without_ping):
+      if random.random() < 0.01:
+        return f"{reply} Help me, hyper-neutrino trapped me in a bot! Please let me out!"
+      else:
+        return f"{reply} I am doing {random.choice(['spectacularly', 'amazingly', 'wonderfully', 'excellently', 'great', 'well', 'poggers', 'you', 'nothing except answering your requests'])}."
+    if re.match(r"^(info|inf(ro|or)(mate?ion)?|wh?at( i[sz]|'s)? vyxal|what vyxal i[sz])\?*$", without_ping):
+      return f"{reply} [GitHub Repository](https://github.com/Vyxal/Vyxal/) | [Online Interpreter](https://lyxal.pythonanywhere.com) | [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md) | [Vyxapedia](https://vyxapedia.hyper-neutrino.xyz) | [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.txt) | [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt) | [GitHub Organization](https://github.com/Vyxal/)"
+    if re.match(r"^ping me$", without_ping):
+      STORAGE["pings"].append(message["user_name"].replace(" ", ""))
+      save()
+      return f"{reply} I have put you on the ping list."
+    if re.match(r"^(don't ping me|pingn't me)$", without_ping):
+      try:
+        STORAGE["pings"].remove(message["user_name"].replace(" ", ""))
+      except:
+        pass
+      save()
+      return f"{reply} I have taken you off of the ping list."
+    if re.match(r"^(hyper-?ping|ping every(body|one))$", without_ping):
+      if STORAGE["pings"]:
+        return " ".join("@" + x.replace(" ", "") for x in sorted(set(STORAGE["pings"]))) + " ^"
+      else:
+        return f"{reply} Nobody is on the ping list."
+    if re.match(r"^rm ping", without_ping) and message["user_id"] == 281362:
+      name = content.split("rm ping", 1)[1].strip().replace(" ", "")
+      try:
+        STORAGE["pings"].remove(name)
+      except:
+        print(name + " is not on the ping list.")
+        pass
+      save()
+      return f"{reply} done"
+    if re.match(r"^add ping", without_ping) and message["user_id"] == 281362:
+      STORAGE["pings"].append(content.split("add ping", 1)[1].strip().replace(" ", ""))
+      save()
+      return f"{reply} done"
+    if re.match(r"^(w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??|h[ea]lp( pl[sz])?)", without_ping):
+      return inspect.cleandoc(f"""
+      {reply} All of my commands start with @VyxalBot or !!/
 
-    - To add yourself to the ping list, use "ping me"
-    - To remove yourself from the ping list, use "don't ping me"
-    - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)
-    - To ping everyone, use "hyperping" or "ping every(body|one)"
-    """)
-  match = re.match(r"^issue\s+((.+?)\s+)?<b>(.+?)</b>\s*(.*?)(\s+<code>.+?</code>)+$", without_ping)
-  if match:
-    if message["user_id"] not in STORAGE["privileged"]:
-      return f"{reply} you are not a privileged user; ask someone to grant you permissions if you believe you should have them (user id: {message['user_id']})"
-    _, repo, title, body, tags = match.groups()
-    repo = repo or "Vyxal"
-    tags = re.findall("<code>(.+?)</code>", without_ping)
-    r = requests.post(f"https://api.github.com/repos/Vyxal/{repo}/issues", headers = {
-      "Authorization": "token " + STORAGE["token"],
-      "Accept": "application/vnd.github.v3+json"
-    }, data = json.dumps({
-      "title": title,
-      "body": body,
-      "labels": tags
-    }))
-    if r.status_code == 404:
-      return f"{reply} failed to create the issue (404); make sure you have spelled the repository name correctly"
-    elif r.status_code != 201:
-      return f"{reply} failed to create the issue ({r.status_code}): {r.json()['message']}"
-    return ""
-  if re.match(r"^issue", without_ping):
-    return f"{reply} " + r"`!!/issue repository **title** body \`label\` \`label\`` - if the repository is not specified, it assumes `Vyxal/Vyxal`; the body can be omitted but it is recommended that you write a description; at least one label is required"
-  if re.match(r"^am ?i ?privileged\??", without_ping):
-    if message["user_id"] in STORAGE["privileged"]:
-      return f"{reply} you are a privileged user"
-    else:
-      return f"{reply} you are not a privileged user; ask someone if you believe you should be (user id: {message['user_id']})"
-  if re.match(r"^pull$", without_ping):
-    if message["user_id"] in STORAGE["privileged"]:
-      send(f"{reply} pulling new changes; I will restart in a few seconds if any updates are available")
-      os.system("git pull")
+      - To add yourself to the ping list, use "ping me"
+      - To remove yourself from the ping list, use "don't ping me"
+      - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)
+      - To ping everyone, use "hyperping" or "ping every(body|one)"
+      """)
+    match = re.match(r"^" + ping_regex + r"issue\s+((.+?)\s+)?<b>(.+?)</b>\s*(.*?)(\s+<code>.+?</code>)+$", content)
+    if match:
+      if message["user_id"] not in STORAGE["privileged"]:
+        return f"{reply} you are not a privileged user; ask someone to grant you permissions if you believe you should have them (user id: {message['user_id']})"
+      _, repo, title, body, tags = match.groups()[-5:]
+      repo = repo or "Vyxal"
+      tags = re.findall("<code>(.+?)</code>", without_ping)
+      r = requests.post(f"https://api.github.com/repos/Vyxal/{repo}/issues", headers = {
+        "Authorization": "token " + STORAGE["token"],
+        "Accept": "application/vnd.github.v3+json"
+      }, data = json.dumps({
+        "title": title,
+        "body": body,
+        "labels": tags
+      }))
+      if r.status_code == 404:
+        return f"{reply} failed to create the issue (404); make sure you have spelled the repository name correctly"
+      elif r.status_code != 201:
+        return f"{reply} failed to create the issue ({r.status_code}): {r.json()['message']}"
       return ""
-    else:
-      return f"{reply} you are not a privileged user; ask someone if you beleive you should be (user id: {message['user_id']})"
-  match = re.match(r"^(pro|de)mote (\d+)", without_ping)
-  if match:
-    if message["user_id"] not in STORAGE["admin"]:
-      return f"{reply} you are not an admin!"
-    action, uid = match.groups()
-    uid = int(uid)
-    if action == "pro":
-      if uid not in STORAGE["privileged"]:
-        STORAGE["privileged"].append(uid)
-    else:
-      if uid in STORAGE["privileged"]:
-        STORAGE["privileged"].remove(uid)
-    return f"{reply} {action}moted user #{uid}"
-  if re.match(r"blame$", without_ping):
-    return f"{reply} It was {random.choice(['wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'])}'s fault!"
+    if re.match(r"^issue", without_ping):
+      return f"{reply} " + r"`!!/issue repository **title** body \`label\` \`label\`` - if the repository is not specified, it assumes `Vyxal/Vyxal`; the body can be omitted but it is recommended that you write a description; at least one label is required"
+    if re.match(r"^am ?i ?privileged\??", without_ping):
+      if message["user_id"] in STORAGE["privileged"]:
+        return f"{reply} you are a privileged user"
+      else:
+        return f"{reply} you are not a privileged user; ask someone if you believe you should be (user id: {message['user_id']})"
+    if re.match(r"^pull$", without_ping):
+      if message["user_id"] in STORAGE["admin"]:
+        send(f"{reply} pulling new changes; I will restart in a few seconds if any updates are available")
+        os.system("git pull")
+        return ""
+      else:
+        return f"{reply} you are not an admin!"
+    if re.match(r"^blame$", without_ping):
+      return f"{reply} It was {random.choice(list({'wasif', 'Underslash', 'math', 'Aaron Miller', 'A username', 'user', 'Unrelated String', 'AviFS', 'Razetime', 'lyxal', '2x-1', 'hyper-neutrino'} - {message['user_name']}))}'s fault!"
+    if re.match(r"^(hello|howdy|mornin['g]|evenin['g])$", without_ping):
+      return f"{reply} hello to you too!"
+    if re.match(r"^((good)?bye|see ya\!?|'night|goodnight)$", without_ping):
+      return f"{reply} o/"
+    if re.match(r"^flowey quote$", without_ping):
+      return f"{reply} %s" % random.choice(["Howdy, I'm FLOWEY. FLOWEY the FLOWER", "In this world, it's KILL or BE killed.", "Hehehe, you really ARE an idiot.", "Clever...verrrry clever. You think you're really smart, don't you.", "Is this a joke? Are you braindead? RUN INTO THE BULLETS!!!", "I've read every book. I've burned every book. I've won every game. I've lost every game. I've appeased everyone. I've killed everyone. Sets of numbers... Lines of dialog... I've seen them all.", "You...! I'll keep you here no matter what! _Even if it means killing you 1,000,000 times!", "Down here, LOVE is shared through little white... 'friendliness pellets'", "Hehehe... did you REALLY think you could defeat ME?"])
+    match = re.match(r"^(pro|de)mote (\d+)", without_ping)
+    if match:
+      if message["user_id"] not in STORAGE["admin"]:
+        return f"{reply} you are not an admin!"
+      action, uid = match.groups()
+      uid = int(uid)
+      if action == "pro":
+        if uid not in STORAGE["privileged"]:
+          STORAGE["privileged"].append(uid)
+      else:
+        if uid in STORAGE["privileged"]:
+          STORAGE["privileged"].remove(uid)
+      return f"{reply} {action}moted user #{uid}"
   return ""
 
 @app.route("/repo", methods = ["POST"])
