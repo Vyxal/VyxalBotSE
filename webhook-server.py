@@ -302,7 +302,7 @@ def receive_github_webhook():
       send(f"{linkteam(team)} was deleted by {link(data['sender']['login'])}")
     elif data["action"] == "added_to_repository":
       send(f"{linktea(team)} was added to {linkrepo(data['repository'])} by {link(data['sender']['login'])}")
-  elif data["action"] == "remove_from_repository":
+    elif data["action"] == "remove_from_repository":
       send(f"{linktea(team)} was removed from {linkrepo(data['repository'])} by {link(data['sender']['login'])}")
   if data.get("action") in ["opened", "reopened"] and "pull_request" in data:
     pr = data["pull_request"]
