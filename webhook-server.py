@@ -194,7 +194,7 @@ def receive_message():
         "Accept": "application/vnd.github.v3+json"
       }, data = json.dumps({
         "title": title,
-        "body": body,
+        "body": body + "\n\n" + f"(created by {message['user_name']} [here](https://chat.stackexchange.com/transcript/message/{message['message_id']}))",
         "labels": tags
       }))
       if r.status_code == 404:
