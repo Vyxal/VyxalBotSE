@@ -231,8 +231,10 @@ def receive_message():
       }, data = json.dumps({
         "type": "public"
       }))
-      if r.status_code != 200:
+      if r.status_code == 200:
         return f"{reply} " + " | ".join(map(linkrepo, r.json()))
+      else:
+        return f"{reply} failed to fetch repositories; if this persists, submit an issue"
     match = re.match(r"^(pro|de)mote (\d+)", without_ping)
     if match:
       if message["user_id"] not in STORAGE["admin"]:
