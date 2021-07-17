@@ -43,8 +43,8 @@ def linkref(refname, data):
 def linkissue(issue, caps = True):
   return f"[{'iI'[caps]}ssue #{issue['number']}]({issue['html_url']})"
 
-def linkrepo(repo):
-  return f"[{repo['full_name']}]({repo['html_url']})"
+def linkrepo(repo, name = "full_name"):
+  return f"[{repo[name]}]({repo['html_url']})"
 
 def linkteam(team):
   return f"[{team['name']}]({team['html_url']})"
@@ -232,7 +232,7 @@ def receive_message():
         "type": "public"
       }))
       if r.status_code == 200:
-        return f"{reply} " + " | ".join(map(linkrepo, r.json()))
+        return f"{reply} " + " | ".join(linkrepo(repo, "name") for repo in r.json())
       else:
         return f"{reply} failed to fetch repositories; if this persists, submit an issue"
     match = re.match(r"^(pro|de)mote (\d+)", without_ping)
