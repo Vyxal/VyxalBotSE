@@ -223,7 +223,25 @@ def receive_message():
     if re.match(r"^((good)?bye|see ya\!?|'night|goodnight)$", without_ping):
       return f"{reply} o/"
     if re.match(r"^flowey quote$", without_ping):
-      return f"{reply} %s" % random.choice(["Howdy, I'm FLOWEY. FLOWEY the FLOWER", "In this world, it's KILL or BE killed.", "Hehehe, you really ARE an idiot.", "Clever...verrrry clever. You think you're really smart, don't you.", "Is this a joke? Are you braindead? RUN INTO THE BULLETS!!!", "I've read every book. I've burned every book. I've won every game. I've lost every game. I've appeased everyone. I've killed everyone. Sets of numbers... Lines of dialog... I've seen them all.", "You...! I'll keep you here no matter what! _Even if it means killing you 1,000,000 times!", "Down here, LOVE is shared through little white... 'friendliness pellets'", "Hehehe... did you REALLY think you could defeat ME?"])
+      return f"{reply} %s" % random.choice(["Howdy, I'm FLOWEY. FLOWEY the FLOWER", "In this world, it's KILL or BE killed.", "Hehehe, you really ARE an idiot.", 
+                                            "Clever...verrrry clever. You think you're really smart, don't you.", "Is this a joke? Are you braindead? RUN INTO THE BULLETS!!!",
+                                            "I've read every book. I've burned every book. I've won every game. I've lost every game. I've appeased everyone. I've killed everyone. Sets of numbers... Lines of dialog... I've seen them all.",
+                                            "You...! I'll keep you here no matter what! _Even if it means killing you 1,000,000 times!_",
+                                            "Down here, LOVE is shared through little white... 'friendliness pellets'", "Hehehe... did you REALLY think you could defeat ME?",
+                                            "Don't you have anything better to do?", "You! You're hopeless! Hopeless and _alone_",
+                                            "Don't you get it? This is all just a game... if you leave the underground satisfied, you'll \"WIN\" the game. And if you win, you won't want to play with me anymore",
+                                            "Why...why are you being so NICE to me?!? I can't understand. I just _can't_ understand",
+                                            "Hmmm, you're new to the underground, aren'tch'a? Golly, you must be so confused. Someone ought to teach you how things work around here", 
+                                            "What's LV stand for? Why LOVE of course! You want some LOVE don't you? Don't worry, I'll share some with you!",
+                                            "You IDIOT!", "Why would anyone pass up an opportunity like this? DIE!", "So you were able to play by your own rules. You spared the life of a single person. Hee hee hee... I bet you feel really great.",
+                                            "Don't worry, my little monarch, my plan isn't regicide...this is SO much more interesting.", "You idiot. You haven't learned a thing. In this world...**I T S  K I L L  O R  B E  K I L L E D**",
+                                            "No...NO! This can't be happening! You...YOU! _You IDIOT!_", "I owe you a HUGE thanks...you really did a number on that old fool. Without you, I NEVER could have gotten past him",
+                                            "What? Do you really think you can stop ME? Hee hee hee...you really ARE an idiot.", "Boy! What a shame! Nobody else...is going to get to see you DIE!!!",
+                                            "What?! How'd you...?! Well I'll just. Wh...where are my powers?! The souls...? What are they doing? NO!! NO!!!!! YOU CAN'T DO THAT!!! YOU'RE SUPPOSED TO OBEY ME!! STOP!!! STOP IT!!!!! STOOOOPPPP!!!!!",
+                                            "...What are you doing? Do you really think I've learned anything from this? No. Sparing me won't change anything.",
+                                            "And you know what the best part is? This is all YOUR fault!", "Let's destroy everything in this wretched world. Everyone, everything in these worthless memories... Let's turn 'em all to dust.",
+                                           "_that's a wonderful idea!_", "At first, I used my powers for good. I became \"friends\" with everyone. I solved all their problems flawlessly. Their companionship was amusing... For a while.",
+                                           "It doesn't matter now. I'm so tired of this, Chara. I'm tired of all these people. I'm tired of all these places. I'm tired of being a flower."])
     if re.match(r"^repo(sitor(y|ies))? list$", without_ping):
       r = requests.get(f"https://api.github.com/orgs/Vyxal/repos", headers = {
         "Authorization": "token " + STORAGE["token"],
