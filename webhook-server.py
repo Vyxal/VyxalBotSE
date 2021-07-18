@@ -1,4 +1,4 @@
-import hmac, html, json, os, re
+import hmac, html, json, os, re, time
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -94,6 +94,7 @@ def receive_join():
   if user not in STORAGE["visited"]:
     STORAGE["visited"].append(user)
     save()
+    time.sleep(5)
     return f"@{data['data']['user_name'].replace(' ', '')} Welcome to the Vyxal chat room!"
   return ""
 
