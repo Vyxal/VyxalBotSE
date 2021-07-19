@@ -224,7 +224,7 @@ def receive_message():
     if re.match(r"^((good)?bye|see ya\!?|'night|goodnight)$", without_ping):
       return f"{reply} o/"
     if re.match(r"^flowey quote$", without_ping):
-      return f"{reply} %s" % random.choice(["Howdy, I'm FLOWEY. FLOWEY the FLOWER", "In this world, it's KILL or BE killed.", "Hehehe, you really ARE an idiot.", 
+      return f"{reply} %s" % random.choice(["Howdy, I'm FLOWEY. FLOWEY the FLOWER", "In this world, it's KILL or BE killed.", "Hehehe, you really ARE an idiot.",
                                             "Clever...verrrry clever. You think you're really smart, don't you.", "Is this a joke? Are you braindead? RUN INTO THE BULLETS!!!",
                                             "I've read every book. I've burned every book. I've won every game. I've lost every game. I've appeased everyone. I've killed everyone. Sets of numbers... Lines of dialog... I've seen them all.",
                                             "You...! I'll keep you here no matter what! _Even if it means killing you 1,000,000 times!_",
@@ -232,7 +232,7 @@ def receive_message():
                                             "Don't you have anything better to do?", "You! You're hopeless! Hopeless and _alone_",
                                             "Don't you get it? This is all just a game... if you leave the underground satisfied, you'll \"WIN\" the game. And if you win, you won't want to play with me anymore",
                                             "Why...why are you being so NICE to me?!? I can't understand. I just _can't_ understand",
-                                            "Hmmm, you're new to the underground, aren'tch'a? Golly, you must be so confused. Someone ought to teach you how things work around here", 
+                                            "Hmmm, you're new to the underground, aren'tch'a? Golly, you must be so confused. Someone ought to teach you how things work around here",
                                             "What's LV stand for? Why LOVE of course! You want some LOVE don't you? Don't worry, I'll share some with you!",
                                             "You IDIOT!", "Why would anyone pass up an opportunity like this? DIE!", "So you were able to play by your own rules. You spared the life of a single person. Hee hee hee... I bet you feel really great.",
                                             "Don't worry, my little monarch, my plan isn't regicide...this is SO much more interesting.", "You idiot. You haven't learned a thing. In this world...**I T S  K I L L  O R  B E  K I L L E D**",
@@ -348,7 +348,7 @@ def receive_github_webhook():
     alert = data["alert"]
     send(f"**security alert** ({alert['severity']}) created by {link(data['sender']['login'])} in {linkrepo(data['repository'])}) (affected package: _{msgify(alert['affected_package_name'])} {alert['affected_range']})")
   elif data.get("action") == "published" and "release" in data:
-    send(f"[**{data['release']['name'] or data['release']['tag_name']}**]({data['release']['html_url']})", pin = data["repository"]["full_name"] == "Vyxal/Vyxal")
+    send(f"[**{data['release']['name'] or data['release']['tag_name']}**]({data['release']['html_url']})" + ("" if data["repository"]["full_name"] == "Vyxal/Vyxal" else " for " + data["respository"]["full_name"]), pin = data["repository"]["full_name"] == "Vyxal/Vyxal")
   return ""
 
 if __name__ == "__main__":
