@@ -245,6 +245,8 @@ def receive_message():
                                                                                      "It doesn't matter now. I'm so tired of this, Chara. I'm tired of all these people. I'm tired of all these places. I'm tired of being a flower."])
         if re.match(r"^hug$", without_ping):
             return f"{reply} %s" % random.choice(["⊂((・▽・))⊃", "⊂(◉‿◉)つ", "(づ｡◕‿‿◕｡)づ", "༼ つ ◕_◕ ༽つ", "(つ ͡° ͜ʖ ͡°)つ", "༼ つ ◕o◕ ༽つ"])
+        if re.match(r"^sus$", without_ping):
+            return f"{reply} ඞ"
         if re.match(r"^repo(sitor(y|ies))? list$", without_ping):
             r = requests.get(f"https://api.github.com/orgs/Vyxal/repos", headers = {
                 "Authorization": "token " + STORAGE["token"],
