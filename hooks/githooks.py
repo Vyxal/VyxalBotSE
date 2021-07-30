@@ -1,10 +1,17 @@
 from main import app
 from utils import *
+from variables import *
 
 
 @app.route("/branch-tag-created", methods=["POST"])
 @webhook
 def webhook_branch_tag_created(data):
+    if data["ref_type"] == "branch":
+        send(
+            link_user(data["sender"]["login"])
+            + " created a new branch: "
+            + link_ref(data["ref"][11:])
+        )
     return ""
 
 
