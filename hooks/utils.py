@@ -48,7 +48,7 @@ def link_ref(refname, data):
         + "/"
         + refname
         + "]("
-        + data["repository"]["url"]
+        + data["repository"]["html_url"]
         + "/tree/"
         + refname
         + ")"
