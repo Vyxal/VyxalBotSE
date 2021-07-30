@@ -22,7 +22,9 @@ def webhook_branch_tag_deleted(data):
         send(
             link_user(data["sender"]["login"])
             + " deleted branch "
-            + link_ref(data["ref"], data)
+            + data["repository"]["name"]
+            + "/"
+            + data["ref"]
         )
     return ""
 
