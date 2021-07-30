@@ -19,7 +19,7 @@ def on_join():
     return ""
 
 @app.route("/msg", methods = ["POST"])
-# @msghook
+@msghook
 def receive_message():
     data = request.json
     message = data["message"]
