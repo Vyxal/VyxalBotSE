@@ -95,7 +95,7 @@ def receive_join():
         STORAGE["visited"].append(user)
         save()
         time.sleep(5)
-        return f"@{data['data']['user_name'].replace(' ', '')} Welcome to the Vyxal chat room!"
+        return f"@{data['data']['user_name'].replace(' ', '')} Welcome to the Vyxal chat room! Type !!/help for my list of commands, and !!/info for info about Vyxal!"
     return ""
 
 @app.route("/msg", methods = ["POST"])
