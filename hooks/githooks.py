@@ -54,7 +54,7 @@ def webhook_discussion(data):
             link_user(data["sender"]["login"])
             + " pinned "
             + link_discussion(data["discussion"])
-            + "(in "
+            + " (in "
             + link_repository(data["repository"])
             + ")"
         )
