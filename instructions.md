@@ -34,6 +34,14 @@ Remove yourself from the list of people pinged when someone uses `hyperping`
 
 Ping everyone on the ping list. **USE THIS SPARINGLY/ONLY WHEN NEEDED. DO NOT SPAM THIS COMMAND**
 
+### `hug`
+
+Show your love for Vyxal Bot with a hug. 
+
+### `sus`
+
+Who's the impostor? Did you see them vent? Amogus!!!
+
 ### `help`
 
 Returns an overview of Vyxal Bot commands. NGL it's probably how you got here. Idk.
