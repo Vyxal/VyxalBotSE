@@ -174,7 +174,7 @@ def receive_message():
                 "type": "public"
             }))
             if r.status_code == 200:
-                return f"{reply} " + " | ".join(linkrepo(repo, "name") for repo in r.json())
+                return f"{reply} " + " | ".join(link_repository(repo, full_name = False) for repo in r.json())
             else:
                 return f"{reply} failed to fetch repositories; if this persists, submit an issue"
         match = re.match(r"^(pro|de)mote (\d+)", without_ping)
