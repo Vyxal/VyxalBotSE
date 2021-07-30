@@ -38,6 +38,13 @@ def webhook_discussion(data):
 @app.route("/fork", methods=["POST"])
 @webhook
 def webhook_fork(data):
+    send(
+        link_user(data["sender"]["login"])
+        + " forked "
+        + link_repository(data["repository"])
+        + " into "
+        + link_repository(data["forkee"])
+    )
     return ""
 
 
