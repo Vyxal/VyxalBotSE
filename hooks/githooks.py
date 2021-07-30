@@ -114,6 +114,19 @@ def webhook_issue(data):
 @app.route("/pr-review-comment", methods=["POST"])
 @webhook
 def webhook_pr_review_comment(data):
+    if data["action"] == "created":
+        send(
+            link_user(data["sender"]["login"])
+            + " [commented]("
+            + data["comment"]["url"]
+            + ") on "
+            + link_pull_request(data["pull_request"])
+            + " in file `"
+            + data["comment"]["path"]
+            + '`: "'
+            + data["comment"]["body"].split("\n")[0]
+            + '"'
+        )
     return ""
 
 
