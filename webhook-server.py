@@ -182,6 +182,9 @@ def receive_message():
             - To remove yourself from the ping list, use "don't ping me"
             - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)
             - To ping everyone, use "hyperping" or "ping every(body|one)"
+            
+            
+            For a full list of commands, see https://github.com/Vyxal/VyxalBotSE/blob/master/instructions.md
             """)
         match = re.match(r"^" + ping_regex + r"issue\s+((.+?)\s+)?<b>(.+?)</b>\s*(.*?)(\s+<code>.+?</code>)+$", content)
         if match:
