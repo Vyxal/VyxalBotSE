@@ -8,9 +8,10 @@ from variables import *
 def webhook_branch_tag_created(data):
     if data["ref_type"] == "branch":
         send(
-            link_user(data["sender"]["login"])
-            + " created a new branch: "
+            "Branch "
             + link_ref(data["ref"], data)
+            + " was created by "
+            + link_user(data["sender"]["login"])
         )
     return ""
 
@@ -20,11 +21,12 @@ def webhook_branch_tag_created(data):
 def webhook_branch_tag_deleted(data):
     if data["ref_type"] == "branch":
         send(
-            link_user(data["sender"]["login"])
-            + " deleted branch "
+            "Branch "
             + data["repository"]["name"]
             + "/"
             + data["ref"]
+            + " was deleted by "
+            + link_user(data["sender"]["login"])
         )
     return ""
 
@@ -52,11 +54,10 @@ def webhook_discussion(data):
     elif action == "pinned":
         send(
             link_user(data["sender"]["login"])
-            + " pinned "
-            + link_discussion(data["discussion"])
-            + " (in "
+            + " pinned a discussion in "
             + link_repository(data["repository"])
-            + ")"
+            + ": "
+            + link_discussion(data["discussion"])
         )
     return ""
 
@@ -77,6 +78,36 @@ def webhook_fork(data):
 @app.route("/issue", methods=["POST"])
 @webhook
 def webhook_issue(data):
+    action = data["action"]
+    if action == "opened":
+        send(
+            link_user(data["sender"]["login"])
+            + " opened "
+            + link_issue(data["issue"], caps=False)
+            + " in "
+            + link_repository(data["repository"])
+            + ": _"
+            + msgify(data["issue"]["title"])
+            + "_"
+        )
+    elif action in ["deleted", "closed", "edited", "reopened"]:
+        issue_link = (
+            "issue #" + str(data["issue"]["number"])
+            if action == "deleted"
+            else link_issue(data["issue"], caps=False)
+        )
+        send(
+            link_user(data["sender"]["login"])
+            + " "
+            + action
+            + " "
+            + issue_link
+            + " (_"
+            + msgify(data["issue"]["title"])
+            + "_, "
+            + link_repository(data["repository"])
+            + ")"
+        )
     return ""
 
 
