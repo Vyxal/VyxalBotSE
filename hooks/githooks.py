@@ -111,12 +111,6 @@ def webhook_issue(data):
     return ""
 
 
-@app.route("/organization", methods=["POST"])
-@webhook
-def webhook_organization(data):
-    return ""
-
-
 @app.route("/pr-review-comment", methods=["POST"])
 @webhook
 def webhook_pr_review_comment(data):
