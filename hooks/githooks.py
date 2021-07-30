@@ -18,6 +18,12 @@ def webhook_branch_tag_created(data):
 @app.route("/branch-tag-deleted", methods=["POST"])
 @webhook
 def webhook_branch_tag_deleted(data):
+    if data["ref_type"] == "branch":
+        send(
+            link_user(data["sender"]["login"])
+            + " deleted branch "
+            + link_ref(data["ref"][11:], data)
+        )
     return ""
 
 
