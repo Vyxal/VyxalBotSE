@@ -138,6 +138,8 @@ def webhook_pr_review(data):
     if data["action"] == "submitted":
         review = data["review"]
         if review["state"] == "commented":
+            if not review["body"]:
+                return ""
             action_text = "commented"
         elif review["state"] == "approved":
             action_text = "approved"
