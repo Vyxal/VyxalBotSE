@@ -43,13 +43,20 @@ def webhook_discussion(data):
         )
     elif action == "deleted":
         send(
-            link_user(
-                data["sender"]["login"]
-                + " deleted a discussion in "
-                + link_repository(data["repository"])
-                + ": "
-                + data["discussion"]["title"]
-            )
+            link_user(data["sender"]["login"])
+            + " deleted a discussion in "
+            + link_repository(data["repository"])
+            + ": "
+            + data["discussion"]["title"]
+        )
+    elif action == "pinned":
+        send(
+            link_user(data["sender"]["login"])
+            + " pinned "
+            + link_discussion(data["discussion"])
+            + "(in "
+            + link_repository(data["repository"])
+            + ")"
         )
     return ""
 
