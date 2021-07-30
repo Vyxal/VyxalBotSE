@@ -58,15 +58,6 @@ def webhook_discussion(data):
             + link_repository(data["repository"])
             + ")"
         )
-    elif action == "answered":
-        send(
-            link_user(data["sender"]["login"])
-            + " answered "
-            + link_discussion(data["discussion"])
-            + ": [link]("
-            + data["discussion"]["answer_html_url"]
-            + ")"
-        )
     return ""
 
 
