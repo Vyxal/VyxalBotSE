@@ -52,14 +52,28 @@ def link_issue(issue, caps=True):
     )
 
 
-def link_pull_request(pull_request):
-    return (
+def link_pull_request(pull_request, include_repository=True):
+    message = (
         "[PR #"
         + str(pull_request["number"])
         + "]("
         + pull_request["html_url"]
         + ")"
     )
+    if include_repository:
+        src = pull_request["base"]["repo"]
+        dst = pull_request["head"]["repo"]
+        if src["full_name"] == dst["full_name"]:
+            message += " (" + link_repository(src) + ")"
+        else:
+            message += (
+                " ("
+                + link_repository(src)
+                + " → "
+                + link_repository(dest)
+                + ")"
+            )
+    return message
 
 
 def link_ref(refname, data):
