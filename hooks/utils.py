@@ -37,7 +37,7 @@ def linkref(refname, data):
 def linkissue(issue, caps = True):
     return f"[{'iI'[caps]}ssue #{issue['number']}]({issue['html_url']})"
 
-def link_repository(repo, fullname = True):
+def link_repository(repo, full_name = True):
     return f"[{repo['full_name' if fullname else 'name']}]({repo['html_url']})"
 
 def linkteam(team):
