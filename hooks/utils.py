@@ -100,14 +100,13 @@ def link_user(user):
     return f"[{user}](https://github.com/{user})"
 
 
-def msgify(text):
-    return (
-        text.split("\n")[0]
-        .split("\r\f")[0]
-        .replace("_", "\\_")
-        .replace("*", "\\*")
-        .replace("`", "\\`")
-    )
+def msgify(text, escape=True):
+    message = text.split("\n")[0].split("\r")[0].split("\f")[0]
+    if escape:
+        message = (
+            message.replace("_", "\\_").replace("*", "\\*").replace("`", "\\`")
+        )
+    return message
 
 
 def execute(flags, code, inputs, header="", footer=""):
