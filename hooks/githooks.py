@@ -136,7 +136,29 @@ def webhook_pr_review_comment(data):
 @webhook
 def webhook_pr_review(data):
     if data["action"] == "submitted":
-        print(json.dumps(data["review"], indent=4))
+        review = data["review"]
+        if review["state"] == "commented":
+            action_text = "commented"
+        elif review["state"] == "approved":
+            action_text = "approved"
+        elif review["state"] == "changes_requested":
+            action_text = "requested changes"
+        else:
+            return ""
+        send(
+            link_user(data["sender"]["login"])
+            + " ["
+            + action_text
+            + "]("
+            + review["html_url"]
+            + ") on "
+            + link_pull_request(data["pull_request"])
+            + (
+                ': "' + review["body"].split("\n")[0] + '"'
+                if review["body"]
+                else ""
+            )
+        )
     return ""
 
 
