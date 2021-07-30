@@ -198,6 +198,8 @@ def webhook_pull_request(data):
 @webhook
 def webhook_push(data):
     commits = data["commits"]
+    if len(commits) == 0:
+        return ""
     commit = commits[-1]
     if len(commits) == 1:
         send(
@@ -209,7 +211,7 @@ def webhook_push(data):
             + ": "
             + msgify(commit["message"])
         )
-    elif len(commits) != 0:
+    else:
         send(
             link_user(data["sender"]["login"])
             + " pushed "
@@ -236,7 +238,7 @@ def webhook_release(data):
         + "**]("
         + release["html_url"]
         + ")"
-        + ("" if primary else " released in " + link_repository(reposiotry)),
+        + ("" if primary else " released in " + link_repository(repository)),
         pin=primary,
     )
     return ""
