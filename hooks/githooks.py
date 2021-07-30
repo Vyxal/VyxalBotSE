@@ -10,7 +10,7 @@ def webhook_branch_tag_created(data):
         send(
             link_user(data["sender"]["login"])
             + " created a new branch: "
-            + link_ref(data["ref"][11:], data)
+            + link_ref(data["ref"], data)
         )
     return ""
 
@@ -22,7 +22,7 @@ def webhook_branch_tag_deleted(data):
         send(
             link_user(data["sender"]["login"])
             + " deleted branch "
-            + link_ref(data["ref"][11:], data)
+            + link_ref(data["ref"], data)
         )
     return ""
 
