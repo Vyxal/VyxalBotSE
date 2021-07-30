@@ -35,10 +35,21 @@ def send(message, **data):
     )
 
 
-def link_user(user):
-    if user == "github-actions[bot]":
-        return f"The GitHub Actions bot"
-    return f"[{user}](https://github.com/{user})"
+def link_discussion(discussion):
+    return "[" + discussion["title"] + "](" + discussion["html_url"] + ")"
+
+
+def link_issue(issue, caps=True):
+    letter = "I" if caps else "i"
+    return (
+        "["
+        + letter
+        + "ssue #"
+        + str(issue["number"])
+        + "]("
+        + issue["html_url"]
+        + ")"
+    )
 
 
 def link_ref(refname, data):
@@ -55,12 +66,14 @@ def link_ref(refname, data):
     )
 
 
-def link_issue(issue, caps=True):
-    return f"[{'iI'[caps]}ssue #{issue['number']}]({issue['html_url']})"
-
-
 def link_repository(repo, full_name=True):
     return f"[{repo['full_name' if full_name else 'name']}]({repo['html_url']})"
+
+
+def link_user(user):
+    if user == "github-actions[bot]":
+        return f"The GitHub Actions bot"
+    return f"[{user}](https://github.com/{user})"
 
 
 def msgify(text):

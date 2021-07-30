@@ -32,6 +32,25 @@ def webhook_branch_tag_deleted(data):
 @app.route("/discussion", methods=["POST"])
 @webhook
 def webhook_discussion(data):
+    action = data["action"]
+    if action == "created":
+        send(
+            link_user(data["sender"]["login"])
+            + " created a discussion in "
+            + link_repository(data["repository"])
+            + ": "
+            + link_discussion(data["discussion"])
+        )
+    elif action == "deleted":
+        send(
+            link_user(
+                data["sender"]["login"]
+                + " deleted a discussion in "
+                + link_repository(data["repository"])
+                + ": "
+                + data["discussion"]["title"]
+            )
+        )
     return ""
 
 
