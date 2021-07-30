@@ -38,7 +38,7 @@ def linkissue(issue, caps = True):
     return f"[{'iI'[caps]}ssue #{issue['number']}]({issue['html_url']})"
 
 def link_repository(repo, full_name = True):
-    return f"[{repo['full_name' if fullname else 'name']}]({repo['html_url']})"
+    return f"[{repo['full_name' if full_name else 'name']}]({repo['html_url']})"
 
 def linkteam(team):
     return f"[{team['name']}]({team['html_url']})"
