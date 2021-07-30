@@ -17,7 +17,7 @@ def on_join():
         STORAGE["visited"].append(user)
         save()
         time.sleep(5)
-        return "@" + data["data"]["user_name"].replace(" ", "") + WELCOME
+        return "@" + data["data"]["user_name"].replace(" ", "") + " " + WELCOME
     return ""
 
 
