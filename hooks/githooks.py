@@ -70,7 +70,7 @@ def webhook_fork(data):
 @app.route("/issue", methods=["POST"])
 @webhook
 def webhook_issue(data):
-    return "" # a b
+    return ""
 
 
 @app.route("/organization", methods=["POST"])
