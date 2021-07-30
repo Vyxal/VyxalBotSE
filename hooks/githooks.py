@@ -1,3 +1,5 @@
+import json
+
 from main import app
 from utils import *
 from variables import *
@@ -133,6 +135,8 @@ def webhook_pr_review_comment(data):
 @app.route("/pr-review", methods=["POST"])
 @webhook
 def webhook_pr_review(data):
+    if data["action"] == "submitted":
+        print(json.dumps(data["review"], indent=4))
     return ""
 
 
