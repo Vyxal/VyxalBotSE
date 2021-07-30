@@ -163,6 +163,34 @@ def webhook_pr_review(data):
 @app.route("/pull-request", methods=["POST"])
 @webhook
 def webhook_pull_request(data):
+    action = data["action"]
+    pr = data["pull_request"]
+    if action == "opened":
+        action_text = "opened"
+    elif action == "closed":
+        if data["merged"]:
+            action_text = "merged"
+        else:
+            action_text = "closed"
+    elif action == "reopened":
+        action_text = "reopened"
+    else:
+        return ""
+    send(
+        link_user(data["sender"]["login"])
+        + " "
+        + action_text
+        + " "
+        + link_pull_request(pr)
+        + " ("
+        + pr["head"]["label"]
+        + " → "
+        + pr["base"]["label"]
+        + ")"
+        + ": _"
+        + msgify(pr["title"])
+        + "_"
+    )
     return ""
 
 
