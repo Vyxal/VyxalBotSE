@@ -70,9 +70,7 @@ messages:
   help: >-
     All of my commands start with @VyxalBot or !!/
 
-    - To add yourself to the ping list, use "ping me"
-
-    - To remove yourself from the ping list, use "don't ping me"
+    - Use "ping me" or "don't ping me" to add/remove yourself from the ping list
 
     - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by
     code, flags, and inputs inside inline code blocks (multiline code is not
