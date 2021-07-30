@@ -123,9 +123,3 @@ def webhook_repository(data):
 @webhook
 def webhook_vulnerability(data):
     return ""
-
-
-@app.route("/repo-visibility", methods=["POST"])
-@webhook
-def webhook_repo_visibility(data):
-    return ""
