@@ -1,4 +1,4 @@
-import hmac, json, requests
+import hmac, json, requests, yaml
 
 from flask import request
 
@@ -13,6 +13,9 @@ def str_equals(x, y):
 with open("../configurations/vybot.txt", "rb") as f:
     secret = f.read().strip()
 
+with open("data.yml", "r") as f:
+    variables = yaml.safe_load(f)
+
 with open("../configurations/vybot.json", "r") as f:
     STORAGE = json.load(f)
 
@@ -26,22 +29,19 @@ def send(message, **data):
         **data
     })
 
-def link(user):
+def link_user(user):
     if user == "github-actions[bot]":
         return f"The GitHub Actions bot"
     return f"[{user}](https://github.com/{user})"
 
-def linkref(refname, data):
+def link_ref(refname, data):
     return f"[{data['repository']['name']}/{refname}]({data['repository']['url']}/tree/{refname})"
 
-def linkissue(issue, caps = True):
+def link_issue(issue, caps = True):
     return f"[{'iI'[caps]}ssue #{issue['number']}]({issue['html_url']})"
 
 def link_repository(repo, full_name = True):
     return f"[{repo['full_name' if full_name else 'name']}]({repo['html_url']})"
-
-def linkteam(team):
-    return f"[{team['name']}]({team['html_url']})"
 
 def msgify(text):
     return text.split("\n")[0].split("\r\f")[0].replace("_", "\\_").replace("*", "\\*").replace("`", "\\`")
