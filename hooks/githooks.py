@@ -247,6 +247,37 @@ def webhook_release(data):
 @app.route("/repository", methods=["POST"])
 @webhook
 def webhook_repository(data):
+    data = request.json
+    action = data["action"]
+    repository = data["repository"]
+    user = data["sender"]["login"]
+    if action == "created":
+        send(
+            link_user(user)
+            + " created a repository: "
+            + link_repository(repository)
+        )
+    elif action == "deleted":
+        send(
+            link_user(user)
+            + " deleted a repository: "
+            + repository["full_name"]
+        )
+        if repository["full_name"] == "Vyxal/Vyxal":
+            send(PRIMARY_DELETED)
+    elif action == "archived":
+        if repo["full_name"] == "Vyxal/Vyxal":
+            send(PRIMARY_ARCHIVED)
+    elif action == "unarchived":
+        pass
+    elif action == "publicized":
+        pass
+    elif action == "privatized":
+        if repo["full_name"] == "Vyxal/Vyxal":
+            send(PRIMARY_PRIVATIZED)
+    else:
+        return ""
+    send(link_user(user) + " " + action + " " + link_repository(repository))
     return ""
 
 

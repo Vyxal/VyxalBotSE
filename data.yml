@@ -97,6 +97,16 @@ messages:
   no-backticks: >-
     Did you forget to put backticks around your code (`\`code\``)? Remember to
     escape any backticks in your code (to type `\`hi\``, enter `\`\\`hi\\`\``).
+  primary-archived: >-
+    @lyxal @hyper-neutrino It appears that the Vyxal/Vyxal repository was
+    archived. Please review recent activity.
+  primary-deleted: >-
+    @lyxal @AaronMiller @Razetime @user @Ausername @hyper-neutrino **NOTICE**:
+    Potential catastrophic failure. It appears that the Vyxal/Vyxal repository
+    has been deleted.
+  primary-privatized: >-
+    @lyxal It appears that the Vyxal/Vyxal repository was privatized. Please
+    reivew this change.
   welcome: >-
     Welcome to the Vyxal chat room! Type !!/help for my list of commands, and
     !!/info for info about Vyxal!
