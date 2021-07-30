@@ -1,5 +1,7 @@
 import hmac, json, requests
 
+from flask import request
+
 def str_equals(x, y):
     if len(x) != len(y):
         return False
