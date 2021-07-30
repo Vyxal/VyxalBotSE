@@ -1,5 +1,8 @@
 messages:
+  help: "All of my commands start with @VyxalBot or !!/\n- To add yourself to the ping list, use \"ping me\"\n- To remove yourself from the ping list, use \"don't ping me\"\n- To evaluate Vyxal code, use \"(execute|run|run code|evaluate)\", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)\n- To ping everyone, use \"hyperping\" or \"ping every(body|one)\""
   info: "[GitHub Repository](https://github.com/Vyxal/Vyxal/) | [Online Interpreter](https://lyxal.pythonanywhere.com) | [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md) | [Vyxapedia](https://vyxapedia.hyper-neutrino.xyz) | [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.txt) | [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt) | [GitHub Organization](https://github.com/Vyxal/)"
+  issue-404: "failed to create the issue (404); make sure you have spelled the repository name correctly"
+  issue-help: "`!!/issue repository **title** body \\`label\\` \\`label\\`` - if the repository is not specified, it assumes `Vyxal/Vyxal`; the body can be omitted but it is recommended that you write a description; at least one label is required"
   no-backticks: "Did you forget to put backticks around your code (`\\`code\\``)? Remember to escape any backticks in your code (to type `\\`hi\\``, enter `\\`\\\\`hi\\\\`\\``)."
   welcome: "Welcome to the Vyxal chat room! Type !!/help for my list of commands, and !!/info for info about Vyxal!"
   statuses: ["spectacularly", "amazingly", "wonderfully", "excellently", "great", "well", "poggers", "you", "nothing except answering your requests"]

@@ -3,11 +3,7 @@ import html, inspect, json, os, random, re, requests, time
 from flask import request
 from main import app
 from utils import *
-
-INFOTEXT = variables["messages"]["info"]
-NO_BACKTICKS = variables["messages"]["no-backticks"]
-WELCOME = variables["messages"]["welcome"]
-STATUSES = variables["messages"]["statuses"]
+from variables import *
 
 
 @app.route("/join", methods=["POST"])
@@ -134,19 +130,11 @@ def receive_message():
             save()
             return f"{reply} done"
         if re.match(
-            r"^(w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)(, you .+?)?\??|h[ea]lp( pl[sz])?)",
+            r"^(w(h(o|y|at)|ut) (are|r) (you|u|yuo|yoo)"
+            "(, you .+?)?\??|h[ea]lp( pl[sz])?)",
             without_ping,
         ):
-            return inspect.cleandoc(
-                f"""
-            {reply} All of my commands start with @VyxalBot or !!/
-
-            - To add yourself to the ping list, use "ping me"
-            - To remove yourself from the ping list, use "don't ping me"
-            - To evaluate Vyxal code, use "(execute|run|run code|evaluate)", followed by code, flags, and inputs inside inline code blocks (multiline code is not supported; provide multiline input in multiple code blocks)
-            - To ping everyone, use "hyperping" or "ping every(body|one)"
-            """
-            )
+            return reply + HELPTEXT
         match = re.match(
             r"^"
             + ping_regex
@@ -155,7 +143,13 @@ def receive_message():
         )
         if match:
             if message["user_id"] not in STORAGE["privileged"]:
-                return f"{reply} you are not a privileged user; ask someone to grant you permissions if you believe you should have them (user id: {message['user_id']})"
+                return (
+                    reply
+                    + "you are not a privileged user; ask someone to grant you "
+                    "permissions if you believe you should have them (user id: "
+                    + str(message["user_id"])
+                    + ")"
+                )
             _, repo, title, body, tags = match.groups()[-5:]
             repo = repo or "Vyxal"
             tags = re.findall("<code>(.+?)</code>", without_ping)
@@ -170,21 +164,29 @@ def receive_message():
                         "title": title,
                         "body": body
                         + "\n\n"
-                        + f"(created by {message['user_name']} [here](https://chat.stackexchange.com/transcript/message/{message['message_id']}))",
+                        + "(created by "
+                        + str(message["user_name"])
+                        + "[here]"
+                        + "(https://chat.stackexchange.com/transcript/message/"
+                        + str(message["message_id"])
+                        + "))",
                         "labels": tags,
                     }
                 ),
             )
             if r.status_code == 404:
-                return f"{reply} failed to create the issue (404); make sure you have spelled the repository name correctly"
+                return reply + ISSUE_404
             elif r.status_code != 201:
-                return f"{reply} failed to create the issue ({r.status_code}): {r.json()['message']}"
+                return (
+                    reply
+                    + "failed to create the issue ("
+                    + str(r.status_code)
+                    + "): "
+                    + r.json()["message"]
+                )
             return ""
         if re.match(r"^issue", without_ping):
-            return (
-                f"{reply} "
-                + r"`!!/issue repository **title** body \`label\` \`label\`` - if the repository is not specified, it assumes `Vyxal/Vyxal`; the body can be omitted but it is recommended that you write a description; at least one label is required"
-            )
+            return reply + ISSUE_HELP
         if re.match(r"^am ?i ?privileged\??", without_ping):
             if message["user_id"] in STORAGE["privileged"]:
                 return f"{reply} you are a privileged user"
