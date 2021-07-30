@@ -227,6 +227,18 @@ def webhook_push(data):
 @app.route("/release", methods=["POST"])
 @webhook
 def webhook_release(data):
+    release = data["release"]
+    repository = data["repository"]
+    primary = repository["full_name"] == "Vyxal/Vyxal"
+    send(
+        "[**"
+        + (release["name"] or release["tag_name"])
+        + "**]("
+        + release["html_url"]
+        + ")"
+        + ("" if primary else " released in " + link_repository(reposiotry)),
+        pin=primary,
+    )
     return ""
 
 
