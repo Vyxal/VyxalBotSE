@@ -286,4 +286,18 @@ def webhook_repository(data):
 @app.route("/vulnerability", methods=["POST"])
 @webhook
 def webhook_vulnerability(data):
+    alert = data["alert"]
+    send(
+        "**"
+        + alert["severity"]
+        + " created by "
+        + link_user(data["sender"]["login"])
+        + " in "
+        + link_repository(data["repository"])
+        + " (affected package: _"
+        + msgify(alert["affected_package_name"])
+        + " "
+        + alert["affected_range"]
+        + "_)"
+    )
     return ""
