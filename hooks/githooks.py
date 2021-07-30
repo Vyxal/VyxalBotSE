@@ -126,7 +126,7 @@ def webhook_push(data):
             + " commits to "
             + link_ref(data["ref"][11:], data)
             + ". [Last commit]("
-            + link_ref(data["ref"][11:], data)
+            + commits[-1]["url"]
             + "): "
             + msgify(commit["message"])
         )
