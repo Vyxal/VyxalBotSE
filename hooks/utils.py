@@ -1,4 +1,4 @@
-import hmac, requests
+import hmac, json, requests
 
 def str_equals(x, y):
     if len(x) != len(y):

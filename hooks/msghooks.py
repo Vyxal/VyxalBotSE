@@ -6,7 +6,7 @@ from utils import *
 
 @app.route("/join", methods = ["POST"])
 @msghook
-def receive_join():
+def on_join():
     data = request.json
     if data["data"]["room_id"] != 106764:
         return "", 201
@@ -22,8 +22,6 @@ def receive_join():
 @msghook
 def receive_message():
     data = request.json
-    if data is None or data.get("secret") != secret.decode("utf-8"):
-        return "", 201
     message = data["message"]
     if message["user_id"] == 296403: return ""
     content = html.unescape(message["content"])
