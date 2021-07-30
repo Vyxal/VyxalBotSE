@@ -5,7 +5,7 @@ from main import app
 from utils import *
 
 INFOTEXT = variables["messages"]["info"]
-
+NO_BACKTICKS = variables["messages"]["no-backticks"]
 
 @app.route("/join", methods=["POST"])
 @msghook
@@ -78,9 +78,7 @@ def receive_message():
         without_ping = re.sub("^" + ping_regex, "", content.lower()).strip()
         if re.match(r"^(exec(ute)?|run|run code|eval(uate)?)", without_ping):
             return (
-                reply + "Did you forget to put backticks around your code "
-                "(`\\`code\\``)? Remember to escape any backticks in your code "
-                "(to type `\\`hi\\``, enter `\\`\\\\`hi\\\\`\\``)."
+                reply + NO_BACKTICKS
             )
         if re.match(
             r"^(status|((lol )?(yo)?u good( (there )?(my )?(epic )?"
