@@ -286,6 +286,8 @@ def webhook_repository(data):
 @app.route("/vulnerability", methods=["POST"])
 @webhook
 def webhook_vulnerability(data):
+    print(json.dumps(data, indent=4))
+    return ""
     alert = data["alert"]
     send(
         "**"
