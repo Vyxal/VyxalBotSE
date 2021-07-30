@@ -168,7 +168,7 @@ def webhook_pull_request(data):
     if action == "opened":
         action_text = "opened"
     elif action == "closed":
-        if data["merged"]:
+        if data.get("merged"):
             action_text = "merged"
         else:
             action_text = "closed"
