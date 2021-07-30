@@ -216,15 +216,15 @@ def receive_message():
                 + "'s fault!"
             )
         if re.match(r"^(hello|howdy|mornin['g]|evenin['g])$", without_ping):
-            return f"{reply} hello to you too!"
+            return reply + "hello to you too!"
         if re.match(r"^((good)?bye|see ya\!?|'night|goodnight)$", without_ping):
-            return f"{reply} o/"
+            return reply + "o/"
         if re.match(r"^flowey quote$", without_ping):
             return reply + random.choice(FLOWEY_QUOTES)
         if re.match(r"^hug$", without_ping):
             return reply + random.choice(HUGS)
         if re.match(r"^sus$", without_ping):
-            return f"{reply} ඞ"
+            return reply + "ඞ"
         if re.match(r"^repo(sitor(y|ies))? list$", without_ping):
             r = requests.get(
                 f"https://api.github.com/orgs/Vyxal/repos",
@@ -239,7 +239,10 @@ def receive_message():
                     link_repository(repo, full_name=False) for repo in r.json()
                 )
             else:
-                return f"{reply} failed to fetch repositories; if this persists, submit an issue"
+                return (
+                    f"{reply} failed to fetch repositories; "
+                    "if this persists, submit an issue"
+                )
         match = re.match(r"^(pro|de)mote (\d+)", without_ping)
         if match:
             if message["user_id"] not in STORAGE["admin"]:
