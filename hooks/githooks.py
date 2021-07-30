@@ -130,12 +130,6 @@ def webhook_pr_review_comment(data):
     return ""
 
 
-@app.route("/pr-review-thread", methods=["POST"])
-@webhook
-def webhook_pr_review_thread(data):
-    return ""
-
-
 @app.route("/pr-review", methods=["POST"])
 @webhook
 def webhook_pr_review(data):
