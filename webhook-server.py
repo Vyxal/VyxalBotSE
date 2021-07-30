@@ -331,6 +331,16 @@ def webhook_pr_review():
 def webhook_pull_request():
     return ""
 
+@app.route("/push", methods = ["POST"])
+@webhook
+def webhook_push():
+    return ""
+
+@app.route("/release", methods = ["POST"])
+@webhook
+def webhook_release():
+    return ""
+
 @app.route("/repository", methods = ["POST"])
 @webhook
 def webhook_repository():
