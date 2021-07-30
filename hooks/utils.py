@@ -87,6 +87,7 @@ def webhook(view):
 
 def msghook(view):
     def inner(*a, **k):
+        data = request.json
         if data is None or data.get("secret") != secret.decode("utf-8"):
             return "", 201
         return view(*a, **k)
