@@ -126,7 +126,7 @@ def webhook_pr_review_comment(data):
             + " in file `"
             + data["comment"]["path"]
             + '`: "'
-            + msgify(data["comment"]["body"], escape=False)
+            + msgify(data["comment"]["body"])
             + '"'
         )
     return ""
@@ -153,11 +153,7 @@ def webhook_pr_review(data):
             + review["html_url"]
             + ") on "
             + link_pull_request(data["pull_request"])
-            + (
-                ': "' + msgify(review["body"], escape=False) + '"'
-                if review["body"]
-                else ""
-            )
+            + (': "' + msgify(review["body"]) + '"' if review["body"] else "")
         )
     return ""
 
