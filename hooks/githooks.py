@@ -84,7 +84,7 @@ def webhook_push(data):
             + ": "
             + msgify(commit["message"])
         )
-    else:
+    elif len(commits) != 0:
         send(
             link_user(data["sender"]["login"])
             + " pushed "
