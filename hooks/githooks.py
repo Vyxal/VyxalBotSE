@@ -10,10 +10,9 @@ from variables import *
 def webhook_branch_tag_created(data):
     if data["ref_type"] == "branch":
         send(
-            "Branch "
+            link_user(data["sender"]["login"])
+            + " created branch "
             + link_ref(data["ref"], data)
-            + " was created by "
-            + link_user(data["sender"]["login"])
         )
     return ""
 
@@ -23,12 +22,11 @@ def webhook_branch_tag_created(data):
 def webhook_branch_tag_deleted(data):
     if data["ref_type"] == "branch":
         send(
-            "Branch "
+            link_user(data["sender"]["login"])
+            + " deleted branch "
             + data["repository"]["name"]
             + "/"
             + data["ref"]
-            + " was deleted by "
-            + link_user(data["sender"]["login"])
         )
     return ""
 
