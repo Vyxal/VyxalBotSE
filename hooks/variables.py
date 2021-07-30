@@ -12,5 +12,6 @@ PRIMARY_DELETED = v["messages"]["primary-deleted"]
 PRIMARY_PRIVATIZED = v["messages"]["primary-privatized"]
 WELCOME = v["messages"]["welcome"]
 
+
 STATUSES = v["messages"]["statuses"]
 USERS = v["users"]
