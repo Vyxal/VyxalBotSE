@@ -83,7 +83,7 @@ def webhook(view):
     def inner(*a, **k):
         if not str_equals(request.headers.get("X-Hub-Signature-256", ""), "sha256=" + "".join(hex(byte)[2:].zfill(2) for byte in hmac.digest(secret, request.data, "sha256"))):
             return "", 201
-        return view(*a, **k)
+        return view(request.json, *a, **k)
     inner.__name__ = view.__name__
     return inner
 
