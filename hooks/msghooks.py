@@ -6,6 +6,9 @@ from utils import *
 
 INFOTEXT = variables["messages"]["info"]
 NO_BACKTICKS = variables["messages"]["no-backticks"]
+WELCOME = variables["messages"]["welcome"]
+STATUSES = variables["messages"]["statuses"]
+
 
 @app.route("/join", methods=["POST"])
 @msghook
@@ -18,11 +21,7 @@ def on_join():
         STORAGE["visited"].append(user)
         save()
         time.sleep(5)
-        return (
-            "@"
-            + data["data"]["user_name"].replace(" ", "")
-            + " Welcome to the Vyxal chat room!"
-        )
+        return "@" + data["data"]["user_name"].replace(" ", "") + WELCOME
     return ""
 
 
@@ -77,9 +76,7 @@ def receive_message():
     if re.match("^" + ping_regex, content.lower()):
         without_ping = re.sub("^" + ping_regex, "", content.lower()).strip()
         if re.match(r"^(exec(ute)?|run|run code|eval(uate)?)", without_ping):
-            return (
-                reply + NO_BACKTICKS
-            )
+            return reply + NO_BACKTICKS
         if re.match(
             r"^(status|((lol )?(yo)?u good( (there )?(my )?(epic )?"
             "(bro|dude|sis|buddy|mate|m8|gamer)?)?\??))$",
@@ -89,24 +86,7 @@ def receive_message():
                 return reply + "Help me, hyper-neutrino trapped me in a bot! "
                 "Please let me out!"
             else:
-                return (
-                    reply
-                    + "I am doing "
-                    + random.choice(
-                        [
-                            "spectacularly",
-                            "amazingly",
-                            "wonderfully",
-                            "excellently",
-                            "great",
-                            "well",
-                            "poggers",
-                            "you",
-                            "nothing except answering your requests",
-                        ]
-                    )
-                    + "."
-                )
+                return reply + "I am doing " + random.choice(STATUSES) + "."
         if re.match(
             r"^(info|inf(ro|or)(mate?ion)?|wh?at( i[sz]|'s)? vyxal|"
             "what vyxal i[sz])\?*$",

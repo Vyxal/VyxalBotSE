@@ -1,3 +1,5 @@
 messages:
   info: "[GitHub Repository](https://github.com/Vyxal/Vyxal/) | [Online Interpreter](https://lyxal.pythonanywhere.com) | [Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md) | [Vyxapedia](https://vyxapedia.hyper-neutrino.xyz) | [List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.txt) | [Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt) | [GitHub Organization](https://github.com/Vyxal/)"
   no-backticks: "Did you forget to put backticks around your code (`\\`code\\``)? Remember to escape any backticks in your code (to type `\\`hi\\``, enter `\\`\\\\`hi\\\\`\\``)."
+  welcome: "Welcome to the Vyxal chat room! Type !!/help for my list of commands, and !!/info for info about Vyxal!"
+  statuses: ["spectacularly", "amazingly", "wonderfully", "excellently", "great", "well", "poggers", "you", "nothing except answering your requests"]
