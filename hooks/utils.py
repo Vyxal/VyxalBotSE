@@ -52,6 +52,16 @@ def link_issue(issue, caps=True):
     )
 
 
+def link_pull_request(pull_request):
+    return (
+        "[PR #"
+        + str(pull_request["number"])
+        + "]("
+        + pull_request["html_url"]
+        + ")"
+    )
+
+
 def link_ref(refname, data):
     return (
         "["
