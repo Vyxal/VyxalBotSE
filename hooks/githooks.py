@@ -257,6 +257,7 @@ def webhook_repository(data):
             + " created a repository: "
             + link_repository(repository)
         )
+        return ""
     elif action == "deleted":
         send(
             link_user(user)
@@ -265,6 +266,7 @@ def webhook_repository(data):
         )
         if repository["full_name"] == "Vyxal/Vyxal":
             send(PRIMARY_DELETED)
+        return ""
     elif action == "archived":
         if repo["full_name"] == "Vyxal/Vyxal":
             send(PRIMARY_ARCHIVED)
