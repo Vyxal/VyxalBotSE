@@ -4,6 +4,8 @@ from flask import request
 from main import app
 from utils import *
 
+print("hi")
+
 @app.route("/join", methods = ["POST"])
 @msghook
 def on_join():
