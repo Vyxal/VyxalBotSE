@@ -10,7 +10,7 @@ def webhook_branch_tag_created(data):
         send(
             link_user(data["sender"]["login"])
             + " created a new branch: "
-            + link_ref(data["ref"][11:])
+            + link_ref(data["ref"][11:], data)
         )
     return ""
 
