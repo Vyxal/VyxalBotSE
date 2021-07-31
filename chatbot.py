@@ -201,7 +201,7 @@ class Room():
         def sendMessage(self, msg, wait=False):
                 if not wait: log(msg)
                 payload = {"fkey": self.chatbot.fkey, "text": msg}
-                headers={'Referer': 'https://chat.stackexchange.com/rooms/{}/sandbox'.format(self.id),'Origin': 'https://chat.stackexchange.com'}
+                headers={'Referer': 'https://chat.stackexchange.com/rooms/{}'.format(self.id),'Origin': 'https://chat.stackexchange.com'}
                 r = self.chatbot.sendRequest("http://chat.stackexchange.com/chats/{}/messages/new".format(self.id), "post", payload, headers=headers)
                 if r.text.find("You can perform this action again") >= 0: # sending messages too fast
                         time.sleep(3)
