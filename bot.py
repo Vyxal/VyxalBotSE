@@ -113,7 +113,7 @@ def post_message():
                 "Origin": "http://chat.stackexchange.com",
             },
         )
-    return ""
+    return str(msg)
 
 
 @app.route("/edit", methods=["POST"])
