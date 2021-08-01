@@ -118,7 +118,7 @@ def webhook_pr_review_comment(data):
         send(
             link_user(data["sender"]["login"])
             + " [commented]("
-            + data["comment"]["url"]
+            + data["comment"]["html_url"]
             + ") on "
             + link_pull_request(data["pull_request"])
             + " in file `"
