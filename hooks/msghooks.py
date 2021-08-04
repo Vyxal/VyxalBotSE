@@ -104,8 +104,9 @@ def receive_message():
             if STORAGE["pings"]:
                 return (
                     " ".join(
-                        "@" + x.replace(" ", "")
+                        "@" + x
                         for x in sorted(set(STORAGE["pings"]))
+                        if x != message["user_name"].replace(" ", "")
                     )
                     + " ^"
                 )
