@@ -167,7 +167,7 @@ def receive_message():
                         + "\n\n"
                         + "(created by "
                         + str(message["user_name"])
-                        + "[here]"
+                        + " [here]"
                         + "(https://chat.stackexchange.com/transcript/message/"
                         + str(message["message_id"])
                         + "))",
