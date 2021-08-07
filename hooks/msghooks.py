@@ -117,7 +117,6 @@ def receive_message():
             try:
                 STORAGE["pings"].remove(name)
             except:
-                print(name + " is not on the ping list.")
                 pass
             save()
             return f"{reply} done"
@@ -221,7 +220,6 @@ def receive_message():
         if re.match(r"^((good)?bye|see ya\!?|'night|goodnight)$", without_ping):
             return reply + "o/"
         if re.match(r"^flowey quote$", without_ping):
-            print(FLOWEY_QUOTES)
             return reply + random.choice(FLOWEY_QUOTES)
         if re.match(r"^hug$", without_ping):
             return reply + random.choice(HUGS)
