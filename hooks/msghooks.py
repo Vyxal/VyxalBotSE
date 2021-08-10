@@ -89,6 +89,32 @@ def receive_message():
             without_ping,
         ):
             return reply + INFOTEXT
+        if re.match("((please|pls|plz) )?(make|let|have) velociraptors maul .+", without_ping):
+            maul_ind = without_ping.index('maul')
+            username = without_ping[maul_ind + 5:]
+            return f"""
+                                                                   YOU CAN RUN, BUT YOU CAN'T HIDE, {username}
+                                                         ___._
+                                                       .'  <0>'-.._
+                                                      /  /.--.____")
+                                                     |   \   __.-'~
+                                                     |  :  -'/
+                                                    /:.  :.-'
+    __________                                     | : '. |
+    '--.____  '--------.______       _.----.-----./      :/
+            '--.__            `'----/       '-.      __ :/
+                  '-.___           :           \   .'  )/
+                        '---._           _.-'   ] /  _/
+                             '-._      _/     _/ / _/
+                                 \_ .-'____.-'__< |  \___
+                                   <_______.\    \_\_---.7
+                                  |   /'=r_.-'     _\\ =/
+                              .--'   /            ._/'>
+                            .'   _.-'
+       snd                 / .--'
+                          /,/
+                          |/`)
+                          'c=,"""
         if re.match(r"^ping me$", without_ping):
             STORAGE["pings"].append(message["user_name"].replace(" ", ""))
             save()
