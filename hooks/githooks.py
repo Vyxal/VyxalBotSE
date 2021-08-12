@@ -114,19 +114,19 @@ def webhook_issue(data):
 @app.route("/pr-review-comment", methods=["POST"])
 @webhook
 def webhook_pr_review_comment(data):
-    if data["action"] == "created":
-        send(
-            link_user(data["sender"]["login"])
-            + " [commented]("
-            + data["comment"]["html_url"]
-            + ") on "
-            + link_pull_request(data["pull_request"])
-            + " in file `"
-            + data["comment"]["path"]
-            + '`: "'
-            + msgify(data["comment"]["body"])
-            + '"'
-        )
+    # if data["action"] == "created":
+    #     send(
+    #         link_user(data["sender"]["login"])
+    #         + " [commented]("
+    #         + data["comment"]["html_url"]
+    #         + ") on "
+    #         + link_pull_request(data["pull_request"])
+    #         + " in file `"
+    #         + data["comment"]["path"]
+    #         + '`: "'
+    #         + msgify(data["comment"]["body"])
+    #         + '"'
+    #     )
     return ""
 
 
