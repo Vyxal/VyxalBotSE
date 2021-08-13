@@ -161,7 +161,9 @@ def webhook_pr_review(data):
 @app.route("/pull-request", methods=["POST"])
 @webhook
 def webhook_pull_request(data):
-    print(data)
+    import time
+    with open("test%d.txt" % time.time(), "w") as f:
+        json.dump(data, f, indent = 4)
     action = data["action"]
     pr = data["pull_request"]
     if action == "opened":
