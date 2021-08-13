@@ -115,6 +115,11 @@ def receive_message():
                           /,/
                           |/`)
                           'c=,"""
+        if re.match(r"(pl(s|z|ease) )?make meh? a coo?kie", without_ping):
+            if random.random() <= 0.5 or message["user_id"] == 513493:
+                return f"{reply} Here you go: 🍪"
+            else:
+                return f"{reply} No."
         if re.match(r"^ping me$", without_ping):
             STORAGE["pings"].append(message["user_name"].replace(" ", ""))
             save()
