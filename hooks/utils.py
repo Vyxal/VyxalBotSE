@@ -70,7 +70,7 @@ def link_pull_request(pull_request, include_repository=True):
                 " ("
                 + link_repository(src)
                 + " → "
-                + link_repository(dest)
+                + link_repository(dst)
                 + ")"
             )
     return message
