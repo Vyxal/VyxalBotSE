@@ -161,6 +161,7 @@ def webhook_pr_review(data):
 @app.route("/pull-request", methods=["POST"])
 @webhook
 def webhook_pull_request(data):
+    print(data)
     action = data["action"]
     pr = data["pull_request"]
     if action == "opened":
