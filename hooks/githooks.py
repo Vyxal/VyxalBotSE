@@ -195,32 +195,32 @@ def webhook_pull_request(data):
 @app.route("/push", methods=["POST"])
 @webhook
 def webhook_push(data):
-    commits = data["commits"]
-    if len(commits) == 0:
-        return ""
-    commit = commits[-1]
-    if len(commits) == 1:
-        send(
-            link_user(data["sender"]["login"])
-            + " pushed a [commit]("
-            + commit["url"]
-            + ") to "
-            + link_ref(data["ref"][11:], data)
-            + ": "
-            + msgify(commit["message"])
-        )
-    else:
-        send(
-            link_user(data["sender"]["login"])
-            + " pushed "
-            + str(len(commits))
-            + " commits to "
-            + link_ref(data["ref"][11:], data)
-            + ". [Last commit]("
-            + commits[-1]["url"]
-            + "): "
-            + msgify(commit["message"])
-        )
+    # commits = data["commits"]
+    # if len(commits) == 0:
+    #     return ""
+    # commit = commits[-1]
+    # if len(commits) == 1:
+    #     send(
+    #         link_user(data["sender"]["login"])
+    #         + " pushed a [commit]("
+    #         + commit["url"]
+    #         + ") to "
+    #         + link_ref(data["ref"][11:], data)
+    #         + ": "
+    #         + msgify(commit["message"])
+    #     )
+    # else:
+    #     send(
+    #         link_user(data["sender"]["login"])
+    #         + " pushed "
+    #         + str(len(commits))
+    #         + " commits to "
+    #         + link_ref(data["ref"][11:], data)
+    #         + ". [Last commit]("
+    #         + commits[-1]["url"]
+    #         + "): "
+    #         + msgify(commit["message"])
+    #     )
     return ""
 
 
