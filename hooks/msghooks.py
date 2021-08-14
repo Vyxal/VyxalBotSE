@@ -256,6 +256,8 @@ def receive_message():
             return reply + random.choice(HUGS)
         if re.match(r"^sus$", without_ping):
             return reply + "ඞ"
+        if re.match(r"do you sleep?", without_ping):
+            return reply + ("No. hyper is threatening me to not sleep." if random.random() < 0.2 else "No I can't for reasons")
         if re.match(r"^repo(sitor(y|ies))? list$", without_ping):
             r = requests.get(
                 f"https://api.github.com/orgs/Vyxal/repos",
