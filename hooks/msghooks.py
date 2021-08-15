@@ -124,7 +124,7 @@ def receive_message():
             if message["user_id"] in STORAGE["admin"]:
                 return f"{reply} [SUDO] Here you go: 🍪"
             else:
-                return f"{reply} No. Anyways who are you?"
+                return f"{reply} No, you sussy baka."
         if re.match(r"^ping me$", without_ping):
             STORAGE["pings"].append(message["user_name"].replace(" ", ""))
             save()
