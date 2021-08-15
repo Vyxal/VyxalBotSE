@@ -120,6 +120,11 @@ def receive_message():
                 return f"{reply} Here you go: 🍪"
             else:
                 return f"{reply} No."
+        if re.match(r"sudo (pl(s|z|ease) )?make meh? a coo?kie", without_ping):
+            if not (message["user_id"] == 281362 or message["user_id"] == 497390 or message["user_id"] == 475866):
+                return f"{reply} Here you go: 🍪"
+            else:
+                return f"NO."
         if re.match(r"^ping me$", without_ping):
             STORAGE["pings"].append(message["user_name"].replace(" ", ""))
             save()
