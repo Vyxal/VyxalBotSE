@@ -115,16 +115,16 @@ def receive_message():
                           /,/
                           |/`)
                           'c=,"""
-        if re.match(r"(pl(s|z|ease) )?make meh? a coo?kie", without_ping):
+        if re.match(r"(pl(s|z|ease) )?make? meh? a coo?kie", without_ping):
             if random.random() <= 0.5 or message["user_id"] == 513493:
                 return f"{reply} Here you go: 🍪"
             else:
                 return f"{reply} No."
-        if re.match(r"sudo (pl(s|z|ease) )?make meh? a coo?kie", without_ping):
-            if random.random() < 0.25 or not (message["user_id"] == 281362 or message["user_id"] == 497390 or message["user_id"] == 475866):
-                return f"{reply} Here you go: 🍪"
+        if re.match(r"sudo make? meh? a coo?kie", without_ping):
+            if message["user_id"] in STORAGE["admin"]:
+                return f"{reply} [SUDO] Here you go: 🍪"
             else:
-                return f"NO."
+                return f"{reply} No. Anyways who are you?"
         if re.match(r"^ping me$", without_ping):
             STORAGE["pings"].append(message["user_name"].replace(" ", ""))
             save()
