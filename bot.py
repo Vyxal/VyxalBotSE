@@ -58,6 +58,12 @@ def handler(room):
                                 )
                             else:
                                 hooks[x["message_id"]] = send(r.text)
+                        elif x["message_id"] in hooks:
+                            rooms[rid].editMessage(
+                                "(message response failed or the new message is"
+                                " not a command)",
+                                hooks[x["message_id"]],
+                            )
                     except:
                         traceback.print_exc()
 
