@@ -90,7 +90,7 @@ def webhook_issue(data):
             + msgify(data["issue"]["title"])
             + "_"
         )
-    elif action in ["deleted", "closed", "edited", "reopened"]:
+    elif action in ["deleted", "closed", "reopened"]: # removed "edited"
         issue_link = (
             "issue #" + str(data["issue"]["number"])
             if action == "deleted"
