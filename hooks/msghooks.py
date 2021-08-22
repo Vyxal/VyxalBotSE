@@ -89,10 +89,6 @@ def receive_message():
             without_ping,
         ):
             return reply + INFOTEXT
-        m = re.match("^((pretty )?(please|pls|plz) )? (translat|decompil)e (this )?(python )?to (vyxal|the awesomest lang(uage)?):? *(.*)", without_ping)
-        if m:
-            py_code = m.groups()[-1]
-            return f"{reply} `\`{py_code.replace("`", "\`")}\`E`"
         if re.match("((please|pls|plz) )?(make|let|have) velociraptors maul .+", without_ping):
             maul_ind = without_ping.index('maul')
             username = without_ping[maul_ind + 5:]
