@@ -115,7 +115,7 @@ def receive_message():
                           /,/
                           |/`)
                           'c=,"""
-        if re.match(r"(sudo |pl(s|z|ease) )?make? meh? a coo?kie", without_ping):
+        if re.match(r"(sudo |pl(s|z|ease?) )?make? meh? a? coo?kie?", without_ping):
             if without_ping.startswith("sudo"):
                 if message["user_id"] in STORAGE["admin"]:
                     return f"{reply} [SUDO] Here you go: 🍪"
