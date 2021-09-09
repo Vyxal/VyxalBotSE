@@ -115,7 +115,7 @@ def receive_message():
                           /,/
                           |/`)
                           'c=,"""
-        if re.match("(coffee|(make|brew)( a cup of)? coffee for)) .+", without_ping):
+        if re.match("(coffee|(make|brew)( a cup of)? coffee for) .+", without_ping):
             coffee_ind = without_ping.index("for") + 4 if "for" in without_ping else without_ping.index("coffee") + 7
             username = without_ping[coffee_ind:]
             return f"{reply} _brews a cup of coffee for @{username.replace(' ', '')}"
