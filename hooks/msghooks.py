@@ -118,7 +118,7 @@ def receive_message():
         if re.match("(coffee|(make|brew)( a cup of)? coffee for) .+", without_ping):
             coffee_ind = without_ping.index("for") + 4 if "for" in without_ping else without_ping.index("coffee") + 7
             username = without_ping[coffee_ind:]
-            return f"{reply} _brews a cup of coffee for @{username.replace(' ', '')}"
+            return f"{reply} _brews a cup of coffee for @{username.replace(' ', '')}_"
         if re.match(r"(sudo |pl(s|z|ease?) )?make? meh? (a )?coo?kie?", without_ping):
             if without_ping.startswith("sudo"):
                 if message["user_id"] in STORAGE["admin"]:
