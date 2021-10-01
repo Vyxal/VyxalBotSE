@@ -126,7 +126,7 @@ def receive_message():
                 else:
                     return f"{reply} No, you sussy baka."
             else:
-                if random.random() <= 0.5 or message["user_id"] == 513493:
+                if random.random() <= 0.75:
                     return f"{reply} Here you go: 🍪"
                 else:
                     return f"{reply} No."
