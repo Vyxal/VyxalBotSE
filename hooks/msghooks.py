@@ -18,6 +18,9 @@ def on_join():
         save()
         time.sleep(5)
         return "@" + data["data"]["user_name"].replace(" ", "") + " " + WELCOME
+    elif user == 347075:
+        time.sleep(5)
+        return "Oh no oh frick everyone hide your flags quickly"
     return ""
 
 
@@ -126,7 +129,7 @@ def receive_message():
                 else:
                     return f"{reply} No, you sussy baka."
             else:
-                if random.random() <= 0.5 or message["user_id"] == 513493:
+                if random.random() <= 0.5 or message["user_id"] == 513493 or message["user_id"] == 354515:
                     return f"{reply} Here you go: 🍪"
                 else:
                     return f"{reply} No."
