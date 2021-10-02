@@ -96,7 +96,7 @@ def receive_message():
             maul_ind = without_ping.index('maul')
             username = without_ping[maul_ind + 5:]
             return f"""
-                                                                   YOU CAN RUN, BUT YOU CAN'T HIDE, {username}
+                                                                   YOU CAN RUN, BUT YOU CAN'T HIDE, {username.upper()}
                                                          ___._
                                                        .'  <0>'-.._
                                                       /  /.--.____")
@@ -129,7 +129,7 @@ def receive_message():
                 else:
                     return f"{reply} No, you sussy baka."
             else:
-                if random.random() <= 0.5 or message["user_id"] == 513493 or message["user_id"] == 354515:
+                if random.random() <= 0.75 or message["user_id"] == 513493 or message["user_id"] == 354515:
                     return f"{reply} Here you go: 🍪"
                 else:
                     return f"{reply} No."
