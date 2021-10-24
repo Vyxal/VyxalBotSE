@@ -167,8 +167,9 @@ class Room():
                 while self.running:
                         try:
                                 a = self.ws.recv()
-                        except websocket.WebSocketConnectionClosedException as e:
-                                log('Websocket closed unexpectedly for room {}'.format(self.id))
+                        except:
+                                log('Unexpected error for room {}; rebooting'.format(self.id))
+                                exit(-1)
                                 self.running=False
                         if a is not None and a != "":# not an empty messages
                                 a=json.loads(a)
