@@ -169,7 +169,7 @@ class Room():
                                 a = self.ws.recv()
                         except:
                                 log('Unexpected error for room {}; rebooting'.format(self.id))
-                                exit(-1)
+                                raise SystemExit
                                 self.running=False
                         if a is not None and a != "":# not an empty messages
                                 a=json.loads(a)
