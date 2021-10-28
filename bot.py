@@ -122,6 +122,11 @@ def post_message():
     return str(msg)
 
 
+@app.route("/kill")
+def kill():
+    request.environ.get("werkzeug.server.shutdown")()
+
+
 @app.route("/edit", methods=["POST"])
 def edit_message():
     data = request.json
