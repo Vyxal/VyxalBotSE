@@ -90,7 +90,7 @@ def webhook_issue(data):
             + msgify(data["issue"]["title"])
             + "_"
         )
-    elif action in ["deleted", "closed", "reopened"]: # removed "edited"
+    elif action in ["deleted", "closed", "reopened"]:  # removed "edited"
         issue_link = (
             "issue #" + str(data["issue"]["number"])
             if action == "deleted"
@@ -224,10 +224,17 @@ def webhook_push(data):
     return ""
 
 
+last_release = None
+
+
 @app.route("/release", methods=["POST"])
 @webhook
 def webhook_release(data):
+    global last_release
     release = data["release"]
+    if release == last_release:
+        return
+    last_release = release
     repository = data["repository"]
     primary = repository["full_name"] == "Vyxal/Vyxal"
     send(
