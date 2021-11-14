@@ -89,9 +89,12 @@ def receive_message():
             without_ping,
         ):
             return reply + INFOTEXT
-        if re.match("((please|pls|plz) )?(make|let|have) velociraptors maul .+", without_ping):
-            maul_ind = without_ping.index('maul')
-            username = without_ping[maul_ind + 5:]
+        if re.match(
+            "((please|pls|plz) )?(make|let|have) velociraptors maul .+",
+            without_ping,
+        ):
+            maul_ind = without_ping.index("maul")
+            username = without_ping[maul_ind + 5 :]
             return f"""
                                                                    YOU CAN RUN, BUT YOU CAN'T HIDE, {username.upper()}
                                                          ___._
@@ -115,11 +118,19 @@ def receive_message():
                           /,/
                           |/`)
                           'c=,"""
-        if re.match("(coffee|(make|brew)( a cup of)? coffee for) .+", without_ping):
-            coffee_ind = without_ping.index("for") + 4 if "for" in without_ping else without_ping.index("coffee") + 7
+        if re.match(
+            "(coffee|(make|brew)( a cup of)? coffee for) .+", without_ping
+        ):
+            coffee_ind = (
+                without_ping.index("for") + 4
+                if "for" in without_ping
+                else without_ping.index("coffee") + 7
+            )
             username = without_ping[coffee_ind:]
             return f"{reply} _brews a cup of coffee for @{username.replace(' ', '')}_"
-        if re.match(r"(sudo |pl(s|z|ease?) )?make? meh? (a )?coo?kie?", without_ping):
+        if re.match(
+            r"(sudo |pl(s|z|ease?) )?make? meh? (a )?coo?kie?", without_ping
+        ):
             if without_ping.startswith("sudo"):
                 if message["user_id"] in STORAGE["admin"]:
                     return f"{reply} [SUDO] Here you go: 🍪"
@@ -143,6 +154,15 @@ def receive_message():
             return f"{reply} I have taken you off of the ping list."
         if re.match(r"^(hyper-?ping|ping every(body|one))$", without_ping):
             if STORAGE["pings"]:
+                if message["user_id"] not in STORAGE["privileged"]:
+                    return (
+                        reply
+                        + "you are not a privileged user; ask someone to grant "
+                        + "you permissions if you believe you should have them "
+                        + "(user id: "
+                        + str(message["user_id"])
+                        + ")"
+                    )
                 return (
                     " ".join(
                         "@" + x
