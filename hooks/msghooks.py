@@ -88,6 +88,7 @@ def receive_message():
             "what vyxal i[sz])\?*$",
             without_ping,
         ):
+            print(INFOTEXT)
             return reply + INFOTEXT
         if re.match(
             "((please|pls|plz) )?(make|let|have) velociraptors maul .+",
