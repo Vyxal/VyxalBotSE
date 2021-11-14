@@ -76,8 +76,6 @@ messages:
     code, flags, and inputs inside inline code blocks (multiline code is not
     supported; provide multiline input in multiple code blocks)
 
-    - To ping everyone, use "hyperping" or "ping every(body|one)"
-
     - For a full list of commands, see
     https://github.com/Vyxal/VyxalBotSE/blob/master/instructions.md
   info: >-
