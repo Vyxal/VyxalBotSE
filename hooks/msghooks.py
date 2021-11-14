@@ -151,7 +151,7 @@ def receive_message():
             except:
                 pass
             save()
-            return f"{reply} I have taken you off of the ping list."
+            return f"{reply} I have taken you off the ping list."
         if re.match(r"^(hyper-?ping|ping every(body|one))$", without_ping):
             if STORAGE["pings"]:
                 if message["user_id"] not in STORAGE["privileged"]:
