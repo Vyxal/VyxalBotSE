@@ -125,7 +125,7 @@ def execute(flags, code, inputs, header="", footer=""):
 
     session = requests.Session()
 
-    r = session.get("https://lyxal.pythonanywhere.com")
+    r = session.get("https://vyxal.pythonanywhere.com")
     if r.status_code == 200:
         start = r.text.find("<session-code>")
         end = r.text.find("</session-code>")
@@ -139,7 +139,7 @@ def execute(flags, code, inputs, header="", footer=""):
     else:
         return ("", f"[GET /] returned {r.status_code}")
 
-    r = session.post("https://lyxal.pythonanywhere.com/execute", data=payload)
+    r = session.post("https://vyxal.pythonanywhere.com/execute", data=payload)
     if r.status_code == 200:
         try:
             data = r.json()
