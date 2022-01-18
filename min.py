@@ -63,10 +63,10 @@ def response(x):
             return (
                 reply
                 + "[GitHub Repository](https://github.com/Vyxal/Vyxal/) | "
-                + "[Online Interpreter](https://lyxal.pythonanywhere.com) | "
+                + "[Online Interpreter](https://vyxal.pythonanywhere.com) | "
                 + "[Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md) | "
                 + "[Vyxapedia](https://vyxapedia.hyper-neutrino.xyz) | "
-                + "[List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.txt) | "
+                + "[List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md) | "
                 + "[Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt) | "
                 + "[GitHub Organization](https://github.com/Vyxal/)"
             )
