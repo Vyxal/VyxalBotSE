@@ -66,7 +66,7 @@ def response(x):
                 + "[Online Interpreter](https://vyxal.pythonanywhere.com) | "
                 + "[Tutorial](https://github.com/Vyxal/Vyxal/blob/master/docs/Tutorial.md) | "
                 + "[Vyxapedia](https://vyxapedia.hyper-neutrino.xyz) | "
-                + "[List of elements](https://github.com/Vyxal/Vyxal/blob/master/docs/elements.md) | "
+                + "[List of elements](https://github.com/Vyxal/Vyxal/blob/main/documents/knowledge/elements.md) | "
                 + "[Code Page](https://github.com/Vyxal/Vyxal/blob/master/docs/codepage.txt) | "
                 + "[GitHub Organization](https://github.com/Vyxal/)"
             )
