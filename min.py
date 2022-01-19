@@ -4,7 +4,7 @@ import traceback
 
 from chatbot import *
 
-rid = 106764
+rid = 240
 
 
 def execute(flags, code, inputs, header="", footer=""):
@@ -51,7 +51,7 @@ def execute(flags, code, inputs, header="", footer=""):
 
 
 ignored = set()
-owners = {281362, 354515}
+owners = {281362, 354515, 218449, 274572, 322760, 347075, 130368, 337270}
 
 
 def response(x):
@@ -93,7 +93,7 @@ def response(x):
                 code, flags, *inputs = data
             if code == "lyxal":
                 return reply + "https://youtube.com/watch?v=dQw4w9WgXcQ"
-            stdout, stderr = execute(flags, code, input)
+            stdout, stderr = execute(flags, code, inputs)
             output = []
             if stdout.strip() == "":
                 if stderr.strip() == "":
@@ -122,7 +122,6 @@ def response(x):
 
 
 def handler(activity):
-    print(activity)
     if "e" in activity:
         for x in activity["e"]:
             if x.get("room_id") != rid:
