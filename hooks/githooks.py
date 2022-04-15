@@ -226,6 +226,8 @@ def webhook_push(data):
 
 last_release = None
 
+primary = { "Vyxal/Vyxal" }
+secondary = primary | { "Vyxal/Jyxal" }
 
 @app.route("/release", methods=["POST"])
 @webhook
@@ -236,15 +238,15 @@ def webhook_release(data):
         return
     last_release = release
     repository = data["repository"]
-    primary = repository["full_name"] == "Vyxal/Vyxal"
+    name = repository["full_name"]
     send(
         "[**"
         + (release["name"] or release["tag_name"])
         + "**]("
         + release["html_url"]
         + ")"
-        + ("" if primary else " released in " + link_repository(repository)),
-        pin=primary,
+        + ("" if name in secondary else " released in " + link_repository(repository)),
+        pin=name in primary,
     )
     return ""
 
