@@ -237,13 +237,14 @@ def webhook_release(data):
     last_release = release
     repository = data["repository"]
     primary = repository["full_name"] == "Vyxal/Vyxal"
+    jyxal = repository["full_name"] == "Vyxal/Jyxal"
     send(
         "[**"
         + (release["name"] or release["tag_name"])
         + "**]("
         + release["html_url"]
         + ")"
-        + ("" if primary else " released in " + link_repository(repository)),
+        + ("" if primary or jyxal else " released in " + link_repository(repository)),
         pin=primary,
     )
     return ""
