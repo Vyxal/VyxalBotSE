@@ -238,6 +238,7 @@ def webhook_release(data):
         return
     last_release = release
     repository = data["repository"]
+    if repository["visibility"] == "private": return
     name = repository["full_name"]
     send(
         "[**"
@@ -258,6 +259,7 @@ def webhook_repository(data):
     action = data["action"]
     repository = data["repository"]
     user = data["sender"]["login"]
+    if repository["visibility"] == "private": return
     if action == "created":
         send(
             link_user(user)
