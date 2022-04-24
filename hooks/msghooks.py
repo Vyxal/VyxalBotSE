@@ -1,4 +1,4 @@
-import html, inspect, json, os, random, re, requests, time
+import html, inspect, json, os, random, re, requests, time, datetime
 
 from flask import request
 from main import app
@@ -246,8 +246,53 @@ def receive_message():
                     + r.json()["message"]
                 )
             return ""
+        
         if re.match(r"^issue", without_ping):
             return reply + ISSUE_HELP
+        
+        if re.match(r"(update )?prod(uction)?", without_ping):
+            # Create a PR for main -> production
+            # but first check for privleges
+            
+            if message["user_id"] not in STORAGE["privileged"]:
+                return (
+                    reply
+                    + "you are not a privileged user; ask someone to grant you "
+                    "permissions if you believe you should have them (user id: "
+                    + str(message["user_id"])
+                    + ")"
+                )
+            todayDate = datetime.date.today().strftime("%d/%m/%Y")
+            r = requests.post(
+                f"https://api.github.com/repos/Vyxal/{repo}/pulls",
+                headers={
+                    "Authorization": "token " + STORAGE["token"],
+                    "Accept": "application/vnd.github.v3+json",
+                },
+                data=json.dumps({
+                    title: "Update Production (" + todayDate + ")",
+                    head: "main",
+                    base: "production",
+                    body: "Requested by " 
+                    + str(message["user_name"])
+                    + " [here]"
+                    + "(https://chat.stackexchange.com/transcript/message/"
+                    + str(message["message_id"]) + ")"
+                }))
+            
+            if r.status_code == 404:
+                return reply + ISSUE_404
+            elif r.status_code != 201:
+                return (
+                    reply
+                    + "failed to create the pull request ("
+                    + str(r.status_code)
+                    + "): "
+                    + r.json()["message"]
+                )
+            return ""
+                
+                
         if re.match(r"^am ?i ?privileged\??", without_ping):
             if message["user_id"] in STORAGE["privileged"]:
                 return f"{reply} you are a privileged user"
