@@ -1,4 +1,7 @@
-import hmac, json, requests, yaml
+import hmac
+import json
+import requests
+import yaml
 
 from flask import request
 
@@ -61,8 +64,8 @@ def link_pull_request(pull_request, include_repository=True):
         + ")"
     )
     if include_repository:
-        src = pull_request["base"]["repo"]
-        dst = pull_request["head"]["repo"]
+        src = pull_request["head"]["repo"]
+        dst = pull_request["base"]["repo"]
         if src["full_name"] == dst["full_name"]:
             message += " (" + link_repository(src) + ")"
         else:
@@ -135,7 +138,7 @@ def execute(flags, code, inputs, header="", footer=""):
                 "[GET /] returned 200 but the session code "
                 "could not be located",
             )
-        payload["session"] = r.text[start + 14 : end]
+        payload["session"] = r.text[start + 14: end]
     else:
         return ("", f"[GET /] returned {r.status_code}")
 
