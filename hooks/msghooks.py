@@ -250,7 +250,7 @@ def receive_message():
         if re.match(r"^issue", without_ping):
             return reply + ISSUE_HELP
         
-        if re.match(r"(update )?prod(uction)?", without_ping):
+        if re.match(r"^(update )?prod(uction)?", without_ping):
             # Create a PR for main -> production
             # but first check for privleges
             
