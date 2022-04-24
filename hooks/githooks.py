@@ -8,6 +8,8 @@ from variables import *
 @app.route("/branch-tag-created", methods=["POST"])
 @webhook
 def webhook_branch_tag_created(data):
+    repository = data["repository"]
+    if repository["private"]: return
     if data["ref_type"] == "branch":
         send(
             link_user(data["sender"]["login"])
@@ -20,6 +22,8 @@ def webhook_branch_tag_created(data):
 @app.route("/branch-tag-deleted", methods=["POST"])
 @webhook
 def webhook_branch_tag_deleted(data):
+    repository = data["repository"]
+    if repository["private"]: return
     if data["ref_type"] == "branch":
         send(
             link_user(data["sender"]["login"])
@@ -35,6 +39,8 @@ def webhook_branch_tag_deleted(data):
 @webhook
 def webhook_discussion(data):
     action = data["action"]
+    repository = data["repository"]
+    if repository["private"]: return
     if action == "created":
         send(
             link_user(data["sender"]["login"])
@@ -65,6 +71,8 @@ def webhook_discussion(data):
 @app.route("/fork", methods=["POST"])
 @webhook
 def webhook_fork(data):
+    repository = data["repository"]
+    if repository["private"]: return
     send(
         link_user(data["sender"]["login"])
         + " forked "
@@ -79,6 +87,8 @@ def webhook_fork(data):
 @webhook
 def webhook_issue(data):
     action = data["action"]
+    repository = data["repository"]
+    if repository["private"]: return
     if action == "opened":
         send(
             link_user(data["sender"]["login"])
@@ -133,6 +143,8 @@ def webhook_pr_review_comment(data):
 @app.route("/pr-review", methods=["POST"])
 @webhook
 def webhook_pr_review(data):
+    repository = data["repository"]
+    if repository["private"]: return
     if data["action"] == "submitted":
         review = data["review"]
         if review["state"] == "commented":
@@ -162,6 +174,8 @@ def webhook_pr_review(data):
 @webhook
 def webhook_pull_request(data):
     action = data["action"]
+    repository = data["repository"]
+    if repository["private"]: return
     pr = data["pull_request"]
     if action == "opened":
         action_text = "opened"
@@ -238,6 +252,7 @@ def webhook_release(data):
         return
     last_release = release
     repository = data["repository"]
+    if repository["private"]: return
     name = repository["full_name"]
     send(
         "[**"
@@ -257,6 +272,7 @@ def webhook_repository(data):
     data = request.json
     action = data["action"]
     repository = data["repository"]
+    if repository["private"]: return
     user = data["sender"]["login"]
     if action == "created":
         send(
@@ -293,6 +309,8 @@ def webhook_repository(data):
 @app.route("/vulnerability", methods=["POST"])
 @webhook
 def webhook_vulnerability(data):
+    repository = data["repository"]
+    if repository["private"]: return
     alert = data["alert"]
     send(
         "**"
