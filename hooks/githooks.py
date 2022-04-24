@@ -5,23 +5,6 @@ from utils import *
 from variables import *
 
 
-@app.route("/branch-tag-deleted", methods=["POST"])
-@webhook
-def webhook_branch_tag_deleted(data):
-    repository = data["repository"]
-    if repository["private"]:
-        return ""
-    if data["ref_type"] == "branch":
-        send(
-            link_user(data["sender"]["login"])
-            + " deleted branch "
-            + repository["name"]
-            + "/"
-            + data["ref"]
-        )
-    return ""
-
-
 @app.route("/discussion", methods=["POST"])
 @webhook
 def webhook_discussion(data):
