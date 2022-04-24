@@ -130,10 +130,11 @@ def webhook_pr_review_comment(data):
     return ""
 
 
-# TODO add privacy control
 @app.route("/pr-review", methods=["POST"])
 @webhook
 def webhook_pr_review(data):
+    if data["repository"]["private"]:
+        return ""
     if data["action"] == "submitted":
         review = data["review"]
         if review["state"] == "commented":
