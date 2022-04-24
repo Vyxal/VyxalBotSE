@@ -5,6 +5,7 @@ from utils import *
 from variables import *
 
 
+# TODO add privacy control
 @app.route("/branch-tag-created", methods=["POST"])
 @webhook
 def webhook_branch_tag_created(data):
@@ -20,11 +21,14 @@ def webhook_branch_tag_created(data):
 @app.route("/branch-tag-deleted", methods=["POST"])
 @webhook
 def webhook_branch_tag_deleted(data):
+    repository = data["repository"]
+    if repository["private"]:
+        return ""
     if data["ref_type"] == "branch":
         send(
             link_user(data["sender"]["login"])
             + " deleted branch "
-            + data["repository"]["name"]
+            + repository["name"]
             + "/"
             + data["ref"]
         )
@@ -34,12 +38,15 @@ def webhook_branch_tag_deleted(data):
 @app.route("/discussion", methods=["POST"])
 @webhook
 def webhook_discussion(data):
+    repository = data["repository"]
+    if repository["private"]:
+        return ""
     action = data["action"]
     if action == "created":
         send(
             link_user(data["sender"]["login"])
             + " created a discussion in "
-            + link_repository(data["repository"])
+            + link_repository(repository)
             + ": "
             + link_discussion(data["discussion"])
         )
@@ -47,7 +54,7 @@ def webhook_discussion(data):
         send(
             link_user(data["sender"]["login"])
             + " deleted a discussion in "
-            + link_repository(data["repository"])
+            + link_repository(repository)
             + ": "
             + data["discussion"]["title"]
         )
@@ -55,7 +62,7 @@ def webhook_discussion(data):
         send(
             link_user(data["sender"]["login"])
             + " pinned a discussion in "
-            + link_repository(data["repository"])
+            + link_repository(repository)
             + ": "
             + link_discussion(data["discussion"])
         )
@@ -65,10 +72,13 @@ def webhook_discussion(data):
 @app.route("/fork", methods=["POST"])
 @webhook
 def webhook_fork(data):
+    repository = data["repository"]
+    if repository["private"]:
+        return ""
     send(
         link_user(data["sender"]["login"])
         + " forked "
-        + link_repository(data["repository"])
+        + link_repository(repository)
         + " into "
         + link_repository(data["forkee"])
     )
@@ -78,6 +88,9 @@ def webhook_fork(data):
 @app.route("/issue", methods=["POST"])
 @webhook
 def webhook_issue(data):
+    repository = data["repository"]
+    if repository["private"]:
+        return ""
     action = data["action"]
     if action == "opened":
         send(
@@ -85,7 +98,7 @@ def webhook_issue(data):
             + " opened "
             + link_issue(data["issue"], caps=False)
             + " in "
-            + link_repository(data["repository"])
+            + link_repository(repository)
             + ": _"
             + msgify(data["issue"]["title"])
             + "_"
@@ -105,7 +118,7 @@ def webhook_issue(data):
             + " (_"
             + msgify(data["issue"]["title"])
             + "_, "
-            + link_repository(data["repository"])
+            + link_repository(repository)
             + ")"
         )
     return ""
@@ -130,6 +143,7 @@ def webhook_pr_review_comment(data):
     return ""
 
 
+# TODO add privacy control
 @app.route("/pr-review", methods=["POST"])
 @webhook
 def webhook_pr_review(data):
@@ -163,6 +177,8 @@ def webhook_pr_review(data):
 def webhook_pull_request(data):
     action = data["action"]
     pr = data["pull_request"]
+    if pr["head"]["repo"]["private"]:
+        return ""
     if action == "opened":
         action_text = "opened"
     elif action == "closed":
@@ -226,8 +242,9 @@ def webhook_push(data):
 
 last_release = None
 
-primary = { "Vyxal/Vyxal" }
-secondary = primary | { "Vyxal/Jyxal" }
+primary = {"Vyxal/Vyxal"}
+secondary = primary | {"Vyxal/Jyxal"}
+
 
 @app.route("/release", methods=["POST"])
 @webhook
@@ -238,6 +255,8 @@ def webhook_release(data):
         return
     last_release = release
     repository = data["repository"]
+    if repository["private"]:
+        return ""
     name = repository["full_name"]
     send(
         "[**"
@@ -245,7 +264,8 @@ def webhook_release(data):
         + "**]("
         + release["html_url"]
         + ")"
-        + ("" if name in secondary else " released in " + link_repository(repository)),
+        + ("" if name in secondary else " released in " +
+           link_repository(repository)),
         pin=name in primary,
     )
     return ""
@@ -257,6 +277,8 @@ def webhook_repository(data):
     data = request.json
     action = data["action"]
     repository = data["repository"]
+    if repository["private"]:
+        return ""
     user = data["sender"]["login"]
     if action == "created":
         send(
@@ -275,14 +297,14 @@ def webhook_repository(data):
             send(PRIMARY_DELETED)
         return ""
     elif action == "archived":
-        if repo["full_name"] == "Vyxal/Vyxal":
+        if repository["full_name"] == "Vyxal/Vyxal":
             send(PRIMARY_ARCHIVED)
     elif action == "unarchived":
         pass
     elif action == "publicized":
         pass
     elif action == "privatized":
-        if repo["full_name"] == "Vyxal/Vyxal":
+        if repository["full_name"] == "Vyxal/Vyxal":
             send(PRIMARY_PRIVATIZED)
     else:
         return ""
@@ -293,6 +315,9 @@ def webhook_repository(data):
 @app.route("/vulnerability", methods=["POST"])
 @webhook
 def webhook_vulnerability(data):
+    repository = data["repository"]
+    if repository["private"]:
+        return ""
     alert = data["alert"]
     send(
         "**"
@@ -300,7 +325,7 @@ def webhook_vulnerability(data):
         + " created by "
         + link_user(data["sender"]["login"])
         + " in "
-        + link_repository(data["repository"])
+        + link_repository(repository)
         + " (affected package: _"
         + msgify(alert["affected_package_name"])
         + " "
