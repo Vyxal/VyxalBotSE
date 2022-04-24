@@ -5,19 +5,6 @@ from utils import *
 from variables import *
 
 
-# TODO add privacy control
-@app.route("/branch-tag-created", methods=["POST"])
-@webhook
-def webhook_branch_tag_created(data):
-    if data["ref_type"] == "branch":
-        send(
-            link_user(data["sender"]["login"])
-            + " created branch "
-            + link_ref(data["ref"], data)
-        )
-    return ""
-
-
 @app.route("/branch-tag-deleted", methods=["POST"])
 @webhook
 def webhook_branch_tag_deleted(data):
