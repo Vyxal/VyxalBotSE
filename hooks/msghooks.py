@@ -264,7 +264,7 @@ def receive_message():
                 )
             todayDate = datetime.date.today().strftime("%d/%m/%Y")
             r = requests.post(
-                f"https://api.github.com/repos/Vyxal/{repo}/pulls",
+                f"https://api.github.com/repos/Vyxal/Vyxal/pulls",
                 headers={
                     "Authorization": "token " + STORAGE["token"],
                     "Accept": "application/vnd.github.v3+json",
