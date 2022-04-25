@@ -270,10 +270,10 @@ def receive_message():
                     "Accept": "application/vnd.github.v3+json",
                 },
                 data=json.dumps({
-                    title: "Update Production (" + todayDate + ")",
-                    head: "main",
-                    base: "production",
-                    body: "Requested by " 
+                    "title": "Update Production (" + todayDate + ")",
+                    "head": "main",
+                    "base": "production",
+                    "body": "Requested by " 
                     + str(message["user_name"])
                     + " [here]"
                     + "(https://chat.stackexchange.com/transcript/message/"
