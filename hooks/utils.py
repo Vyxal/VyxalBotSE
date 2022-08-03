@@ -142,7 +142,7 @@ def execute(flags, code, inputs, header="", footer=""):
     else:
         return ("", f"[GET /] returned {r.status_code}")
 
-    r = session.post("https://vyxal.pythonanywhere.com/execute", data=payload)
+    r = session.post("https://vyxal.pythonanywhere.com/execute", json=payload)
     if r.status_code == 200:
         try:
             data = r.json()
