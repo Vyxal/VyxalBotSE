@@ -7,8 +7,9 @@ from variables import *
 
 
 def git_request(url, options):
+    token = json.loads(open("../config.json", "r").read())["github-token"]
     headers = {
-        "Authorization": "token " + "GET TOKEN FROM HYPER",
+        "Authorization": "token " + token,
         "Accept": "application/vnd.github.v3+json",
         "User-Agent": "Vyxal-Bot",
     }
