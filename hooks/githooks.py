@@ -5,9 +5,10 @@ from main import app
 from utils import *
 from variables import *
 
+config = json.loads(open("../config.json", "r").read())
+token = config["github_token"]
 
 def git_request(url, options):
-    token = json.loads(open("../config.json", "r").read())["github-token"]
     headers = {
         "Authorization": "token " + token,
         "Accept": "application/vnd.github.v3+json",
