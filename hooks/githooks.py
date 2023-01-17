@@ -1,8 +1,24 @@
 import json
+import re
 
 from main import app
 from utils import *
 from variables import *
+
+config = json.loads(open("../config.json", "r").read())
+token = config["github_token"]
+
+def git_request(url, options):
+    headers = {
+        "Authorization": "token " + token,
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "Vyxal-Bot",
+    }
+    headers.update(options.get("headers", {}))
+    options["headers"] = headers
+
+    response = requests.request("https://api.github.com" + url, **options)
+    return response
 
 
 @app.route("/branch-tag-created", methods=["POST"])
@@ -208,6 +224,88 @@ def webhook_pull_request(data):
         + msgify(pr["title"])
         + "_"
     )
+    if action == "opened":
+        # Perform autolabelling of issues
+        # ported form the JS I wrote originally
+
+        if pr["base"]["repo"]["full_name"] != "Vyxal/Vyxal":
+            # Only PRs on the main repo are autolabelled
+            return ""
+
+        if len(pr["labels"]) > 0:
+            # Don't label something that already has labels
+            return ""
+
+        pr_body = pr["body"]
+        if not pr_body:
+            return ""
+
+        # If we get here, we know that the PR might have an issue linked to it.
+        # We can now get the issue number.
+
+        issue_pobj = re.compile(r"([Cc]lose[sd]?|[Ff]ixe[sd]) #(\d+)/")
+        contains_issue = issue_pobj.match(pr_body)
+        if not contains_issue:
+            return ""
+
+        issue_number = contains_issue.group(2)
+        subres = git_request(
+            f"/repos/{pr['base']['repo.full_name']}/issues/{issue_number}",
+            {
+                "method": "GET",
+            },
+        )
+
+        if subres.status_code != 200:
+            return ""
+
+        issue = subres.json()
+        labels = issue["labels"]
+
+        if len(labels) == 0:
+            return ""
+
+        label_names = []
+        for label in labels:
+            label_names.append(label["name"])
+
+        def map_label(label):
+            if label == "bug":
+                return "PR: Bug Fix"
+            elif label == "documentation":
+                return "PR: Documentation Fix"
+            elif label == "request: element":
+                return "PR: Element Implementation"
+            elif label == "enhancement":
+                return "PR: Enhancement"
+            elif label == "difficulty: very hard":
+                return "PR: Careful Review Required"
+            elif label == "priority: high":
+                return "PR: Urgent Review Required"
+            elif label == "online interpreter":
+                return "PR: Online Interpreter"
+            elif label == "version-3":
+                return "PR: Version 3 Related"
+            elif label in ["difficulty: easy", "good first issue"]:
+                return "PR: Light and Easy"
+            else:
+                return ""
+
+        label_names = list(map(map_label, label_names))
+        # Keep only non-empty strings
+        label_names = list(filter(lambda x: x, label_names))
+
+        if label_names:
+            options = {
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "application/json",
+                },
+                "data": json.dumps({"labels": label_names}),
+            }
+            url = f"/repos/{pr['base']['repo']['full_name']}/issues/{pr['number']}/labels"
+            git_request(url, options)
+
     return ""
 
 
@@ -267,8 +365,11 @@ def webhook_release(data):
         + "**]("
         + release["html_url"]
         + ")"
-        + ("" if name in secondary else " released in " +
-           link_repository(repository)),
+        + (
+            ""
+            if name in secondary
+            else " released in " + link_repository(repository)
+        ),
         pin=name in primary,
     )
     return ""

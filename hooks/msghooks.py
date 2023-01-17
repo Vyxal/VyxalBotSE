@@ -246,14 +246,14 @@ def receive_message():
                     + r.json()["message"]
                 )
             return ""
-        
+
         if re.match(r"^issue", without_ping):
             return reply + ISSUE_HELP
-        
+
         if re.match(r"^(update )?prod(uction)?", without_ping):
             # Create a PR for main -> production
             # but first check for privleges
-            
+
             if message["user_id"] not in STORAGE["privileged"]:
                 return (
                     reply
@@ -269,17 +269,22 @@ def receive_message():
                     "Authorization": "token " + STORAGE["token"],
                     "Accept": "application/vnd.github.v3+json",
                 },
-                data=json.dumps({
-                    "title": "Update Production (" + todayDate + ")",
-                    "head": "main",
-                    "base": "production",
-                    "body": "Requested by " 
-                    + str(message["user_name"])
-                    + " [here]"
-                    + "(https://chat.stackexchange.com/transcript/message/"
-                    + str(message["message_id"]) + ")"
-                }))
-            
+                data=json.dumps(
+                    {
+                        "title": "Update Production (" + todayDate + ")",
+                        "head": "main",
+                        "base": "production",
+                        "labels": ["PR: Production Update"],
+                        "body": "Requested by "
+                        + str(message["user_name"])
+                        + " [here]"
+                        + "(https://chat.stackexchange.com/transcript/message/"
+                        + str(message["message_id"])
+                        + ")",
+                    }
+                ),
+            )
+
             if r.status_code == 404:
                 return reply + ISSUE_404
             elif r.status_code != 201:
@@ -291,8 +296,7 @@ def receive_message():
                     + r.json()["message"]
                 )
             return ""
-                
-                
+
         if re.match(r"^am ?i ?privileged\??", without_ping):
             if message["user_id"] in STORAGE["privileged"]:
                 return f"{reply} you are a privileged user"
