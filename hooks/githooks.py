@@ -5,7 +5,7 @@ from main import app
 from utils import *
 from variables import *
 
-config = json.loads(open("../config.json", "r").read())
+config = json.loads(open("config.json", "r").read())
 token = config["github_token"]
 
 def git_request(url, options):
